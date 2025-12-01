@@ -7,25 +7,33 @@ const router = express.Router();
 
 // REGISTRAZIONE
 router.post("/register", async (req, res) => {
-  const { email, password, username } = req.body;
+  const { username, password } = req.body;
 
   try {
-    const exists = await db.oneOrNone("SELECT * FROM users WHERE email=$1", [
-      email,
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ error: "Username e password sono obbligatori" });
+    }
+
+    // Verifica se username esiste già
+    const exists = await db.oneOrNone("SELECT * FROM users WHERE username=$1", [
+      username,
     ]);
 
-    if (exists) return res.status(400).json({ error: "Email già registrata" });
+    if (exists)
+      return res.status(400).json({ error: "Username già esistente" });
 
     const hashed = await bcrypt.hash(password, 10);
 
     const user = await db.one(
-      `INSERT INTO users (email, username, password)
-       VALUES ($1, $2, $3)
-       RETURNING id, email, username`,
-      [email, username, hashed]
+      `INSERT INTO users (username, password)
+       VALUES ($1, $2)
+       RETURNING id, username`,
+      [username, hashed]
     );
 
-    res.json(user);
+    res.status(201).json(user);
   } catch (error) {
     console.error("Errore registrazione:", error);
     res.status(500).json({ error: "Errore registrazione" });
@@ -34,11 +42,17 @@ router.post("/register", async (req, res) => {
 
 // LOGIN
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
   try {
-    const user = await db.oneOrNone("SELECT * FROM users WHERE email=$1", [
-      email,
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ error: "Username e password sono obbligatori" });
+    }
+
+    const user = await db.oneOrNone("SELECT * FROM users WHERE username=$1", [
+      username,
     ]);
 
     if (!user) return res.status(400).json({ error: "Credenziali errate" });
@@ -47,12 +61,15 @@ router.post("/login", async (req, res) => {
     if (!match) return res.status(400).json({ error: "Password errata" });
 
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.id, username: user.username },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    res.json({ token, user: { id: user.id, email: user.email } });
+    res.json({
+      token,
+      user: { id: user.id, username: user.username },
+    });
   } catch (error) {
     console.error("Errore login:", error);
     res.status(500).json({ error: "Errore login" });
