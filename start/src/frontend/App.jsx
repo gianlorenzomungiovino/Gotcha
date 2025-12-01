@@ -23,6 +23,21 @@ function App() {
         />
       </Routes>
     </AuthProvider>
+    <AuthProvider>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        <Route
+          path="/chatlist"
+          element={
+            <ProtectedRoute>
+              <Chatlist />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </AuthProvider>
   );
 }
 
