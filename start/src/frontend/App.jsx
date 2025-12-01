@@ -1,18 +1,28 @@
 import "./App.css";
-import { Chat } from "./componenti/Chat";
-import { ChatProvider } from "./componenti/ChatContext";
-import { InputBox } from "./componenti/InputBox";
+import { Routes, Route } from "react-router-dom";
+import Login from "./frontend/componenti/Login";
+import Register from "./frontend/componenti/Register";
+import Chatlist from "./frontend/componenti/Chatlist";
+import { AuthProvider } from "./contesti/AuthContext";
+import { ProtectedRoute } from "./contesti/ProtectedRoute";
 
 function App() {
   return (
-    <ChatProvider>
-      <div className="chat-box">
-        <Chat />
-      </div>
-      <div className="input-box">
-        <InputBox />
-      </div>
-    </ChatProvider>
+    <AuthProvider>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        <Route
+          path="/chatlist"
+          element={
+            <ProtectedRoute>
+              <Chatlist />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </AuthProvider>
   );
 }
 
