@@ -30,6 +30,7 @@ const io = new SocketIOServer(server, {
 
 chatSocket(io);
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT;
 
 server.listen(PORT, () => {

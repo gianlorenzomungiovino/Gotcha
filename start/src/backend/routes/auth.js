@@ -62,6 +62,7 @@ router.post("/login", async (req, res) => {
 
     const token = jwt.sign(
       { id: user.id, username: user.username },
+      // eslint-disable-next-line no-undef
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
