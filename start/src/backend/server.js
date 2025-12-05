@@ -1,38 +1,50 @@
+/* eslint-disable no-undef */
 import express from "express";
 import http from "http";
 import cors from "cors";
 import { Server as SocketIOServer } from "socket.io";
-import dotenv from "dotenv";
 
+// Routes
 import authRoutes from "./routes/auth.js";
 import conversationRoutes from "./routes/conversation.js";
 import messageRoutes from "./routes/messages.js";
+
+// Socket
 import chatSocket from "./sockets/chat.js";
 
-dotenv.config();
-
 const app = express();
+const server = http.createServer(app);
+
+// CORS
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
-app.use("/api/conversations", conversationRoutes);
-app.use("/api/messages", messageRoutes);
+// ROUTES
+app.use("/auth", authRoutes);
+app.use("/conversations", conversationRoutes);
+app.use("/messages", messageRoutes);
 
-const server = http.createServer(app);
-
+// SOCKET.IO
 const io = new SocketIOServer(server, {
   cors: {
-    origin: "http://localhost:3000",
-    credentials: true,
+    origin: "*",
+    methods: ["GET", "POST"],
   },
 });
 
-chatSocket(io);
+// Initialize Socket logic
+io.on("connection", (socket) => {
+  console.log("🟢 New client connected:", socket.id);
 
-// eslint-disable-next-line no-undef
-const PORT = process.env.PORT;
+  chatSocket(io, socket); // Passa io e socket al file dei sockets
 
+  socket.on("disconnect", () => {
+    console.log("🔴 Client disconnected:", socket.id);
+  });
+});
+
+// SERVER START
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`🚀 Server avviato sulla porta ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
