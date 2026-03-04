@@ -1,18 +1,21 @@
+/* eslint-disable no-undef */
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-dotenv.config();
 
-export const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
+export function authMiddleware(req, res, next) {
+  const header = req.headers.authorization;
 
-  if (!token) return res.status(401).json({ error: "Token mancante" });
+  if (!header || !header.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Token mancante" });
+  }
+
+  const token = header.split(" ")[1];
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // salva userId dentro req.user
+    req.user = decoded; // id, username
     next();
   } catch (error) {
-    console.error("Errore di autenticazione:", error);
-    res.status(403).json({ error: "Token non valido" });
+    console.error("Errore verifica token:", error);
+    res.status(401).json({ error: "Token non valido" });
   }
-};
+}

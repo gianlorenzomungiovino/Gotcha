@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import db from "../db/index.js";
+import { authMiddleware } from "../utils/authMiddleware.js";
 
 const router = express.Router();
 
@@ -30,13 +31,32 @@ router.post("/register", async (req, res) => {
       `INSERT INTO users (username, password)
        VALUES ($1, $2)
        RETURNING id, username`,
-      [username, hashed]
+      [username, hashed],
     );
 
     res.status(201).json(user);
   } catch (error) {
     console.error("Errore registrazione:", error);
     res.status(500).json({ error: "Errore registrazione" });
+  }
+});
+
+// GET USER DATA
+router.get("/me", authMiddleware, async (req, res) => {
+  try {
+    const user = await db.oneOrNone(
+      "SELECT id, username FROM users WHERE id=$1",
+      [req.user.id],
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: "Utente non trovato" });
+    }
+
+    res.json({ user });
+  } catch (error) {
+    console.error("Errore recupero utente:", error);
+    res.status(500).json({ error: "Errore recupero dati utente" });
   }
 });
 
@@ -64,7 +84,7 @@ router.post("/login", async (req, res) => {
       { id: user.id, username: user.username },
       // eslint-disable-next-line no-undef
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
 
     res.json({

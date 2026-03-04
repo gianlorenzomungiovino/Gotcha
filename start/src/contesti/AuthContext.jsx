@@ -1,6 +1,8 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
+
+export { AuthContext };
 
 // eslint-disable-next-line react/prop-types
 export function AuthProvider({ children }) {
@@ -17,7 +19,7 @@ export function AuthProvider({ children }) {
     }
 
     try {
-      const res = await fetch("http://localhost:5001/auth/me", {
+      const res = await fetch("http://localhost:3001/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -43,7 +45,7 @@ export function AuthProvider({ children }) {
   // LOGIN
   async function login(username, password) {
     try {
-      const res = await fetch("http://localhost:5001/auth/login", {
+      const res = await fetch("http://localhost:3001/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -78,8 +80,4 @@ export function AuthProvider({ children }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  return useContext(AuthContext);
 }

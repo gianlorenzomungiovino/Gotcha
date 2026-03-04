@@ -1,29 +1,9 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../auth/useAuth";
+import useConversation from "../hooks/useChatlist";
 
-export default function ChatList() {
-  const { user } = useAuth(); // contiene { id, username }
-  const [conversations, setConversations] = useState([]);
+export default function Chatlist() {
+  const conversations = useConversation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user) return;
-
-    const fetchConversations = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:3000/api/conversations/${user.id}`
-        );
-        const data = await res.json();
-        setConversations(data);
-      } catch (err) {
-        console.error("Errore fetch conversazioni:", err);
-      }
-    };
-
-    fetchConversations();
-  }, [user]);
 
   const handleOpenChat = (convId) => {
     navigate(`/chat/${convId}`);
@@ -43,7 +23,11 @@ export default function ChatList() {
 
           <div className="chat-item-last">
             <span>{conv.last_message}</span>
-            <small>{new Date(conv.last_message_time).toLocaleString()}</small>
+            <small>
+              {conv.last_message_time
+                ? new Date(conv.last_message_time).toLocaleString()
+                : "Nessun messaggio"}
+            </small>
           </div>
         </div>
       ))}

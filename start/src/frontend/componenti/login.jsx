@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { useUserContext } from "../contesti/useContext";
+import useAuth from "../../contesti/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 
 export function Login() {
-  const { fetchUserLogged } = useUserContext();
-
+  const { login, fetchUser } = useAuth();
   const [data, setData] = useState({
     username: "",
     password: "",
@@ -22,29 +21,21 @@ export function Login() {
       [name]: value,
     }));
   };
+
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch("http://localhost:5001/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      let responseData;
-      try {
-        responseData = await response.json();
+      const response = await login(data.username, data.password);
 
-        const { token } = responseData; // Il backend restituisce il token
-        sessionStorage.setItem("token", token); // Salva il token
-        await fetchUserLogged();
-      } catch (error) {
-        throw new Error(error.message);
-      }
-      if (!response.ok) {
-        setMessaggio("credenziali errate o utente non esistente");
+      if (!response.success) {
+        setMessaggio(response.message);
       } else {
         setMessaggio("login effettuato con successo");
-        navToChatlist("/Chatlist");
+
+        // Chiamata alla funzione fetchUser per aggiornare il contesto
+        await fetchUser();
+
+        navToChatlist("/chatlist");
       }
     } catch (error) {
       setMessaggio(error.message);
@@ -53,12 +44,6 @@ export function Login() {
 
   return (
     <div className="main-container">
-      <img
-        className="logo-img"
-        src="src\assets\loghi\logo.svg"
-        width={250}
-        alt="logo ramberly"
-      />
       <form className="form" onSubmit={handleLogin}>
         <label htmlFor="">Username:</label>
         <input
@@ -90,7 +75,6 @@ export function Login() {
           </p>
         )}
       </form>
-      <img src="src\assets\loghi\freccia.svg" alt="freccia" />
     </div>
   );
 }
