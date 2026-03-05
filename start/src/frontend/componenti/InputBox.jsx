@@ -1,20 +1,25 @@
 import { useInputBox } from "../hooks/useInputBox";
 
 export function InputBox() {
-  const { inputValue, setInputValue, isBotTyping, handleSubmit, error } =
-    useInputBox();
+  const {
+    inputValue,
+    setInputValue,
+    isOtherUserTyping,
+    typingUser,
+    handleSubmit,
+  } = useInputBox();
 
   return (
     <div className="input-container">
       <span
         id="typing-msg"
         style={{
-          opacity: isBotTyping ? 0.9 : 0,
+          opacity: isOtherUserTyping ? 0.9 : 0,
           transition: "opacity 0.1s ease-in-out",
-          color: !error ? "black" : "red",
+          color: "black",
         }}
       >
-        {!error ? "Bot sta scrivendo..." : "Errore nelle risposte bot"}
+        {typingUser ? `${typingUser} sta scrivendo...` : ""}
       </span>
 
       <div className="input-btn-box">

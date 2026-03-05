@@ -6,6 +6,7 @@ export default function Chatlist() {
   const navigate = useNavigate();
 
   const handleOpenChat = (convId) => {
+    console.log("Opening chat with conversation ID:", convId);
     navigate(`/chat/${convId}`);
   };
 

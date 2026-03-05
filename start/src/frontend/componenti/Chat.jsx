@@ -1,16 +1,19 @@
+import { useParams } from "react-router-dom";
 import { useChat } from "../hooks/useChat";
+import { InputBox } from "./InputBox";
 
 export function Chat() {
+  const { convId } = useParams();
   const {
     messages,
     chatBoxRef,
     isAtBottom,
     handleScrollBottom,
     handleScrollBtn,
-  } = useChat();
+  } = useChat(convId);
 
   return (
-    <>
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <div ref={chatBoxRef} onScroll={handleScrollBottom} className="msg-box">
         {messages.map((msg, index) => (
           <span
@@ -50,6 +53,7 @@ export function Chat() {
           src="\down-arrow-download-svgrepo-com.svg"
         />
       </button>
-    </>
+      <InputBox />
+    </div>
   );
 }

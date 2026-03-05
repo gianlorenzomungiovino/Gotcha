@@ -20,7 +20,7 @@ router.get("/:conversationId", authMiddleware, async (req, res) => {
       FROM conversation_participants 
       WHERE conversation_id = $1 AND user_id = $2;
       `,
-      [conversationId, userId]
+      [conversationId, userId],
     );
 
     if (!isParticipant)
@@ -39,7 +39,7 @@ router.get("/:conversationId", authMiddleware, async (req, res) => {
       WHERE m.conversation_id = $1
       ORDER BY m.created_at ASC;
       `,
-      [conversationId]
+      [conversationId],
     );
 
     res.json(messages);
@@ -70,7 +70,7 @@ router.post("/:conversationId", authMiddleware, async (req, res) => {
       FROM conversation_participants 
       WHERE conversation_id = $1 AND user_id = $2;
       `,
-      [conversationId, userId]
+      [conversationId, userId],
     );
 
     if (!isParticipant)
@@ -83,18 +83,22 @@ router.post("/:conversationId", authMiddleware, async (req, res) => {
       VALUES ($1, $2, $3)
       RETURNING id, conversation_id, sender_id, text, created_at;
       `,
-      [conversationId, userId, text]
+      [conversationId, userId, text],
     );
 
     // Aggiorna updated_at della conversazione
     await db.none(
       `
-      UPDATE conversations 
+      UPDATE conversations
       SET updated_at = now()
       WHERE id = $1;
       `,
-      [conversationId]
+      [conversationId],
     );
+
+    // 🚀 BROADCAST MESSAGE VIA SOCKET.IO
+    req.io.to(`conversation_${conversationId}`).emit("new_message", message);
+    console.log("📩 HTTP message sent and broadcasted:", message);
 
     res.json(message);
   } catch (error) {

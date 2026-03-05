@@ -1,57 +1,140 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useChatContext } from "../componenti/ChatContext";
-import { useFetch } from "./useFetch";
+import useAuth from "../../contesti/useAuth";
+import io from "socket.io-client";
 
 export function useInputBox() {
-  const { addMessage } = useChatContext();
+  const { addMessage, conversationId } = useChatContext();
+  const { user } = useAuth();
   const [inputValue, setInputValue] = useState("");
-  const [isBotTyping, setIsBotTyping] = useState(false);
+  const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
+  const [typingUser, setTypingUser] = useState(null);
+  const socketRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
 
-  const { data, error } = useFetch();
+  // Connessione Socket.IO
+  useEffect(() => {
+    if (conversationId && user) {
+      socketRef.current = io("http://localhost:3001", {
+        auth: {
+          token: sessionStorage.getItem("token"),
+        },
+      });
 
-  // const risposteBot = [
-  //   "Ciao",
-  //   "Come stai?",
-  //   "Tutto bene, grazie e tu?",
-  //   "anche io bene, grazie per aver chiesto",
-  //   "Spero che tu stia avendo una giornata fantastica! 😊",
-  //   "Ah, è sempre bello parlare con te!",
-  //   "Suona davvero interessante!",
-  //   "Mi piace il tuo entusiasmo!",
-  //   "Hai bisogno di qualcosa di specifico?",
-  //   "Ciao! Come posso aiutarti oggi?",
-  //   "Interessante, raccontami di più!",
-  //   "Non sono sicuro di aver capito, potresti ripetere?",
-  //   "Che bello sentirti!",
-  //   "Grazie per aver condiviso!",
-  // ];
+      const socket = socketRef.current;
 
-  function handleSubmit() {
+      // Join conversation room
+      socket.emit("join_conversation", conversationId);
+
+      // Listen for typing events
+      socket.on("user_typing", (data) => {
+        if (data.user_id !== user.id) {
+          setIsOtherUserTyping(true);
+          setTypingUser(data.username);
+        }
+      });
+
+      socket.on("user_stop_typing", (data) => {
+        if (data.user_id !== user.id) {
+          setIsOtherUserTyping(false);
+          setTypingUser(null);
+        }
+      });
+
+      // Listen for new messages
+      socket.on("new_message", (message) => {
+        // Aggiorna i messaggi quando arriva un nuovo messaggio
+        const formattedMessage = {
+          content: message.text,
+          sender: message.sender_id === user.id ? "user" : "bot",
+        };
+        addMessage(formattedMessage.content, formattedMessage.sender);
+      });
+
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [conversationId, user, addMessage]);
+
+  const handleInputChange = (value) => {
+    setInputValue(value);
+
+    if (socketRef.current && conversationId) {
+      // Clear existing timeout
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+
+      // Emit typing event
+      socketRef.current.emit("typing", {
+        conversation_id: conversationId,
+        user_id: user.id,
+        username: user.username,
+      });
+
+      // Set timeout to stop typing
+      typingTimeoutRef.current = setTimeout(() => {
+        if (socketRef.current) {
+          socketRef.current.emit("stop_typing", {
+            conversation_id: conversationId,
+            user_id: user.id,
+          });
+        }
+      }, 1000); // Stop typing after 1 second of inactivity
+    }
+  };
+
+  async function handleSubmit() {
     const cleanInput = inputValue.trim();
 
-    if (cleanInput) {
-      addMessage(cleanInput, "user");
-      setInputValue("");
+    if (!cleanInput || !conversationId) return;
 
-      const randomDelay1 = Math.random() * 3000 + 1500;
-      const randomDelay2 = randomDelay1 + Math.random() * 2500 + 1500;
-      setTimeout(() => {
-        setTimeout(() => {
-          if (data) {
-            const rispostaSuccessiva =
-              data.risposteBot[
-                Math.floor(Math.random() * data.risposteBot.length)
-              ];
-            addMessage(rispostaSuccessiva, "bot");
-          } else {
-            addMessage("Errore nel caricamento delle risposte del bot.", "bot");
-          }
-          setIsBotTyping(false);
-        }, randomDelay2);
-        setIsBotTyping(true);
-      }, randomDelay1);
+    // Stop typing before sending
+    if (socketRef.current) {
+      socketRef.current.emit("stop_typing", {
+        conversation_id: conversationId,
+        user_id: user.id,
+      });
+    }
+
+    addMessage(cleanInput, "user");
+    setInputValue("");
+
+    try {
+      const token = sessionStorage.getItem("token");
+
+      // Invia il messaggio al backend
+      const response = await fetch(
+        `http://localhost:3001/messages/${conversationId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            text: cleanInput,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Il messaggio verrà ricevuto via socket, non serve ricaricare
+    } catch (err) {
+      console.error("Errore nell'invio del messaggio:", err);
+      addMessage("Errore nell'invio del messaggio.", "bot");
     }
   }
 
-  return { inputValue, setInputValue, isBotTyping, handleSubmit, error };
+  return {
+    inputValue,
+    setInputValue: handleInputChange,
+    isOtherUserTyping,
+    typingUser,
+    handleSubmit,
+  };
 }
