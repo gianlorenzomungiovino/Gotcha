@@ -1,92 +1,250 @@
-Questa app è composta da due componenti principali: Chat.jsx e InputBox.jsx.
-Il primo si occupa di renderizzare sia i messaggi scritti tramite l'input box dall'utente sia le risposte del bot.
-ChatContext.jsx invece crea un contesto che serve a condividere i dati tra i componenti.
+# Gotcha - Applicazione Chat Real-time
+
+Applicazione web full-stack per la gestione di chat in tempo reale, supportando conversazioni 1-to-1 e di gruppo.
 
 ---
 
-<!-- ChatContext.jsx -->
+## 🏗️ Architettura
 
-\_ ChatContext.jsx esporta ChatProvider, che wrappa tutti gli altri componenti a cui passa messages (lo stato attuale del messaggio che comprende contenuto e mittente) e addMessage.
-Quest'ultima, è una funzione richiamata in InputBox, che prende come parametri il contenuto del messaggio (input dell'utente e le risposte del bot) e tiene traccia di tutti i messaggi tramite lo useState che va poi ad aggiungere di volta in volta all' array inizializzato vuoto:
+```
+┌───────────────┐     ┌─────────────────┐     ┌─────────────┐
+│   Frontend    │────▶│     Backend     │◀───▶│  Database   │
+│  (React SPA)  │     │(Express +       │     │PostgreSQL   │
+│               │     │  Socket.IO)     │     │             │
+└───────────────┘     └─────────────────┘     └─────────────┘
+```
 
-    setMessages((prevMessages) => [...prevMessages, { content, sender }]);
+### Stack Tecnologico
 
-    prevMessages è lo stato corrente dell'array di messaggi. Tramite spread operator viene creata una copia di questo a cui viene aggiunto un nuovo oggetto che contiene contenuto e mittente.
-    Dopo che setMessages è chiamato, React ricalcola il componente e rende visibili i messaggi aggiornati.
-
-ChatProvider infine ritorna il contesto chiamato a monte con la costante ChatContext con l'aggiunta del componente Provider:
-
-    <ChatContext.Provider value={{ messages, addMessage }}>
-      {children}
-    </ChatContext.Provider>
-
-    La funzione ChatProvider è una sorta di "contenitore" che fornisce i valori definiti nel value a tutti i componenti figli tramite il ChatContext.Provider.
-    Il parametro { children } è una prop speciale in React che rappresenta tutto ciò che viene passato come "contenuto" al componente ChatProvider.
-
-Questa sintassi è indispensabile per passare ai componenti children i dati contenuti in value.
-Nel componente principale App.jsx viene quindi usato ChatProvider a wrappare tutto:
-
-    <ChatProvider>
-      <div className="chat-box">
-        <Chat />
-      </div>
-      <div className="input-box">
-        <InputBox />
-      </div>
-    </ChatProvider>
-
-In aggiunta, la funzione useChatContext è un custom hook che con lo useContext permette ai componenti dove viene usato di accedere direttamente al contenuto del value del Provider.
-Cioè invece di scrivere:
-
-    const { messages, addMessage } = useContext(ChatContext);
-
-Si semplifica una sola volta a monte:
-
-    const { messages, addMessage } = useChatContext();
-
-Nello specifico viene usato in Chat per per accedere a { messages } e in InputBox per accedere a { addMessages }.
+- **Frontend**: React 18 + Hooks + React Router DOM
+- **Backend**: Node.js + Express.js
+- **Real-time**: Socket.IO
+- **Database**: PostgreSQL con pg-promise
+- **Autenticazione**: JWT (JSON Web Tokens)
+- **Configurazione**: dotenv
 
 ---
 
-<!-- InputBox.jsx -->
+## 📁 Struttura del Progetto
 
-\_ InputBox.jsx è il componente deputato a renderizzare il campo input per la scrittura dei messaggi da parte dell'utente, inviarli con un button e contestualmente attivare le risposte del bot.
+```
+start/src/
+├── backend/
+│   ├── server.js              # Server Express + Socket.IO
+│   ├── db/index.js            # Connessione PostgreSQL
+│   ├── sql/database.sql       # Schema DB completo
+│   ├── routes/
+│   │   ├── auth.js            # Login, Register, Logout
+│   │   ├── conversation.js    # CRUD conversazioni
+│   │   └── messages.js        # Gestione messaggi (con Socket.IO)
+│   ├── sockets/chat.js        # Logica real-time Socket.IO
+│   └── utils/authMiddleware.js
+├── frontend/
+│   ├── App.jsx                # Routing principale con route protette
+│   ├── main.jsx               # Entry point React
+│   ├── componenti/
+│   │   ├── Chat.jsx           # Visualizzazione messaggi con scroll automatico
+│   │   ├── Chatlist.jsx       # Lista conversazioni dell'utente
+│   │   ├── CreateChat.jsx     # Creazione nuove chat (1-to-1 o gruppo)
+│   │   ├── InputBox.jsx       # Input utente + risposte bot simulate
+│   │   ├── login.jsx          # Pagina di login
+│   │   ├── Register.jsx       # Registrazione nuovi utenti
+│   │   └── UserSettings.jsx   # Impostazioni profilo utente
+│   └── hooks/
+│       ├── useChat.jsx        # Hook per gestione messaggi
+│       ├── useInputBox.jsx    # Hook per input utente
+│       └── useChatlist.jsx    # Hook per lista chat
+├── contesti/
+│   ├── AuthContext.jsx        # Gestione autenticazione globale
+│   ├── ProtectedRoute.jsx     # Wrapper per route protette
+│   └── useAuth.js             # Custom hook per stato auth
+└── ...
+```
 
-Per fare ciò serve accedere alla funzione { addMessage } di ChatContext (che aggiunge i messaggi all'array) e serve tenere traccia del value del campo input e del suo onChange tramite useState.
+---
 
-L'azione comincia all' onClick del button che richiama la funzione handleSubmit.
-A monte di questa, tramite il metodo .trim(), viene evitato che venga compiuto il submit del messaggio qualora il value del campo input abbia spazi vuoti.
-In caso contrario l'azione può proseguire richimando addMessage che aggiunge come content dell'oggetto l'inputValue trimmato e come sender "user".
-A seguito di ciò si pulisce il campo input.
+## ✨ Funzionalità Implementate
 
-Viene poi mimata una risposta finta di un bot con un ritardo random che va dai 2 ai 6 sec.
-Per fare ciò all'interno del setTimeout viene creata una costante rispostaSuccessiva che seleziona un indice casuale dall'array di stringhe risposteBot:
+### 1. **Autenticazione Utenti**
 
-    risposteBot[Math.floor(Math.random() * risposteBot.length)]
+- ✅ Registrazione con username e password
+- ✅ Login/logout con JWT tokens
+- ✅ Sessioni protette con middleware
+- ✅ Eliminazione account utente
 
-    Genera casualmente un numero intero per scegliere l'indice da moltiplicare per la lunghezza dell'array risposteBot.
+### 2. **Gestione Conversazioni**
 
-Fatto questo, la risposta scelta casualmente viene a sua volta aggiunta all'array di messaggi:
+- ✅ Creazione chat 1-to-1 (senza titolo)
+- ✅ Creazione chat di gruppo (con titolo)
+- ✅ Lista conversazioni dell'utente
+- ✅ Gestione partecipanti tramite tabella `conversation_participants`
+- ✅ Eliminazione account con cascata su chat e messaggi
 
-    addMessage(rispostaSuccessiva, "bot")
+### 3. **Messaggi Real-time**
+
+- ✅ Invio messaggi istantaneo via WebSocket
+- ✅ Risposte automatiche simulate (ritardo random 2-6s)
+- ✅ Scroll automatico verso l'ultimo messaggio
+- ✅ Distinzione visiva tra mittenti (user/bot)
+- ✅ Timestamp per ogni messaggio
+
+### 4. **Database Scalabile**
+
+- ✅ Schema supportante chat 1-to-1 e di gruppo
+- ✅ Indici ottimizzati su `messages(conversation_id, created_at DESC)`
+- ✅ Relazioni con `ON DELETE CASCADE`
+- ✅ Unicità partecipanti (conversation_id + user_id)
 
 ---
 
-<!-- Chat.jsx -->
+## 🗄️ Database Schema
 
-\_Chat.jsx si occupa di renderizzare i messaggi inviati dall'utente e le risposte del bot rispettivamente disposti a destra e a sinistra dell'interfaccia.
+### Tabele Principali
 
-Viene richiamato { messages } da ChatContext e viene usato l'hook useRef inizializzato a null per accedere nativamente all'elemento <div> del DOM di modo che ad ogni nuovo messaggio lo scroll si posizioni automaticamente nel punto più in basso.
+| Tabella                     | Descrizione                 | Chiavi                              |
+| --------------------------- | --------------------------- | ----------------------------------- |
+| `users`                     | Utenti autenticati          | PRIMARY KEY: id, UNIQUE: username   |
+| `conversations`             | Conversazioni               | PRIMARY KEY: id, is_group: BOOLEAN  |
+| `conversation_participants` | Partecipanti chat di gruppo | UNIQUE: (conversation_id, user_id)  |
+| `messages`                  | Messaggi delle chat         | INDEX: conversation_id + created_at |
 
-L'elemento <div> è il contenitore principale della chat dove al suo interno viene mappato l'array di messaggi messages (creato in ChatContext) generando un tag <span> per ogni messaggio. Con il placeholder msg di messages.map si accede a {msg.sender} per renderizzare il colore di sfondo e l'allineamento orizzontale in modo condizionale a seconda che il sender sia "user" o "bot".
-Il contenuto del messaggio {msg.content} viene quindi utilizzato all'interno dello <span>.
+### Relazioni
 
-Per scrollare automaticamente all'ultimo messaggio in basso viene usato uno useEffect che come dipendenza prende l'array messages (quindi ne monitora ogni cambiamento) e usa ChatBoxRef.current per accedere ak valore dell'elemento DOM:
-
-    if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-    }
-
-    Se chatBoxRef.current esiste ed è associato ad un elemento DOM, la posizione corrente dello scroll verticale (.scrollTop) diventa l'altezza totale del contenuto di un elemento scrollabile, incluso il contenuto non visibile all'interno della viewport (.scrollHeight).
+```
+users ──1── conversation_participants ──N── conversations
+  │                                              │
+  │                                              ├──1── messages
+  │                                              │
+  └───────────────────────N──────────────────────┘
+```
 
 ---
+
+## 🚀 API Endpoints
+
+### Autenticazione (`/auth`)
+
+| Metodo | Endpoint         | Descrizione                |
+| ------ | ---------------- | -------------------------- |
+| POST   | `/auth/register` | Registrazione nuovo utente |
+| POST   | `/auth/login`    | Login e ricezione JWT      |
+| POST   | `/auth/logout`   | Logout (revoca token)      |
+
+### Conversazioni (`/conversations`)
+
+| Metodo | Endpoint             | Descrizione                |
+| ------ | -------------------- | -------------------------- |
+| GET    | `/conversations`     | Lista conversazioni utente |
+| GET    | `/conversations/:id` | Dettagli conversazione     |
+| POST   | `/conversations`     | Creazione nuova chat       |
+| DELETE | `/conversations/:id` | Eliminazione chat          |
+
+### Messaggi (`/messages`)
+
+| Metodo | Endpoint                       | Descrizione                 |
+| ------ | ------------------------------ | --------------------------- |
+| GET    | `/messages?conversationId=:id` | Lista messaggi (REST)       |
+| POST   | `/messages`                    | Invio messaggio (Socket.IO) |
+
+---
+
+## 🔐 Configurazione
+
+### Variabili d'Ambiente (.env)
+
+```bash
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=gotcha_db
+DB_USER=postgres
+DB_PASSWORD=tua_password
+
+# JWT
+JWT_SECRET=tuo_segreto_jwt_very_secure
+
+# Server
+PORT=3000
+```
+
+### Installazione
+
+```bash
+# Installa dipendenze backend
+npm install
+
+# Installa dipendenze frontend (se separato)
+cd frontend && npm install
+
+# Avvia server
+npm run dev
+```
+
+---
+
+## 📖 Flusso di Utilizzo
+
+1. **Registrazione**: Nuovo utente si registra con username/password
+2. **Login**: Autenticazione e ricezione JWT token
+3. **Creazione Chat**:
+   - 1-to-1: senza titolo, solo partecipanti
+   - Gruppo: con titolo, gestione partecipanti
+4. **Scambio Messaggi**: Real-time via WebSocket
+5. **Impostazioni**: Gestione profilo utente
+
+---
+
+## 🛠️ Sviluppo
+
+### Componenti Chiave
+
+#### `ChatContext.jsx`
+
+Gestisce lo stato dei messaggi tramite React Context API:
+
+- `messages`: array di oggetti `{ content, sender }`
+- `addMessage()`: funzione per aggiungere nuovi messaggi
+- `useChatContext()`: custom hook per accedere allo stato
+
+#### `Socket.IO Integration`
+
+```javascript
+io.on("connection", (socket) => {
+  socket.on("new_message", (data) => {
+    // Invia messaggio a tutti i partecipanti
+    socket.to.emit("message_received", data);
+  });
+});
+```
+
+#### `Autenticazione JWT`
+
+Il token viene verificato sia per le richieste REST che per le connessioni WebSocket:
+
+```javascript
+const decoded = jwt.verify(token, process.env.JWT_SECRET);
+socket.user = decoded; // { id, username }
+```
+
+---
+
+## 📝 Note di Sviluppo
+
+- **React Context**: Usato per condividere stato tra componenti (ChatProvider, AuthProvider)
+- **Hooks Custom**: `useChat`, `useInputBox`, `useChatlist` per logica riutilizzabile
+- **Protected Routes**: Route protette che richiedono autenticazione valida
+- **CORS Configurato**: Permette richieste da frontend e WebSocket
+
+---
+
+---
+
+## 📄 Licenza
+
+Proprietaria - Tutti i diritti riservati.
+
+---
+
+## 👤 Autore
+
+Gianlorenzo - Gotcha Project
