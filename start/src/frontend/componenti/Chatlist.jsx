@@ -12,6 +12,24 @@ export default function Chatlist() {
 
   return (
     <div className="chat-list">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "15px",
+        }}
+      >
+        <h3>Chat Recenti</h3>
+        <button
+          onClick={() => navigate("/create-chat")}
+          className="btn-primary"
+          style={{ fontSize: "0.9em" }}
+        >
+          + Crea Nuova Chat
+        </button>
+      </div>
+
       {conversations.map((conv) => (
         <div
           key={conv.conversation_id}
@@ -32,6 +50,24 @@ export default function Chatlist() {
           </div>
         </div>
       ))}
+
+      <div
+        style={{
+          marginTop: "20px",
+          padding: "15px",
+          background: "#f8f9fa",
+          borderRadius: "8px",
+        }}
+      >
+        <h4 style={{ margin: "0 0 10px 0" }}>Impostazioni</h4>
+        <button
+          onClick={() => navigate("/settings")}
+          className="btn-secondary"
+          style={{ fontSize: "0.9em" }}
+        >
+          Impostazioni Account
+        </button>
+      </div>
     </div>
   );
 }

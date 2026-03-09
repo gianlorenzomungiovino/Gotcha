@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export function Register() {
+export default function Register() {
   const [data, setData] = useState({
     username: "",
     password: "",
@@ -22,7 +22,7 @@ export function Register() {
 
       if (!hasNumber || !hasSpecial || !hasUpper || !isLong) {
         setMessage(
-          "La password deve contenere almeno 6 caratteri, una maiuscola, un numero e un carattere speciale."
+          "La password deve contenere almeno 6 caratteri, una maiuscola, un numero e un carattere speciale.",
         );
         setIsError(true);
       } else {
@@ -57,7 +57,7 @@ export function Register() {
         throw new Error(json.message || "Errore durante la registrazione.");
       }
 
-      setMessage("Registrazione completata! Vai al login...");
+      setMessage("Registrazione completata! Vai al login..");
       setTimeout(() => navigate("/login"), 1000);
     } catch (error) {
       setMessage(error.message);
@@ -73,7 +73,7 @@ export function Register() {
           type="text"
           name="username"
           id="username"
-          placeholder="Username..."
+          placeholder="Username.."
           onChange={handleChange}
           value={data.username}
           required
@@ -84,7 +84,7 @@ export function Register() {
           type="password"
           name="password"
           id="password"
-          placeholder="Password..."
+          placeholder="Password.."
           onChange={handleChange}
           value={data.password}
           required

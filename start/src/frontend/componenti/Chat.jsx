@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useChat } from "../hooks/useChat";
 import { InputBox } from "./InputBox";
 
-export function Chat() {
+export default function Chat() {
   const { convId } = useParams();
   const {
     messages,

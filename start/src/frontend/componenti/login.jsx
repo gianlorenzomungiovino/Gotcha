@@ -2,7 +2,7 @@ import { useState } from "react";
 import useAuth from "../../contesti/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 
-export function Login() {
+export default function Login() {
   const { login, fetchUser } = useAuth();
   const [data, setData] = useState({
     username: "",
@@ -47,10 +47,10 @@ export function Login() {
       <form className="form" onSubmit={handleLogin}>
         <label htmlFor="">Username:</label>
         <input
-          type="username"
+          type="text"
           name="username"
           onChange={handleChange}
-          placeholder="Inserisci il tuo username..."
+          placeholder="Inserisci il tuo username.."
           required
         />
         <label htmlFor="">Password:</label>
@@ -58,7 +58,7 @@ export function Login() {
           type="password"
           name="password"
           onChange={handleChange}
-          placeholder="Inserisci la tua Password..."
+          placeholder="Inserisci la tua Password.."
           required
         />
 

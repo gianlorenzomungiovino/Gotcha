@@ -97,4 +97,46 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// GET LISTA TUTTI GLI UTENTI (per creare chat)
+router.get("/users", authMiddleware, async (req, res) => {
+  try {
+    const users = await db.any(
+      "SELECT id, username FROM users ORDER BY username",
+    );
+
+    // Escludi l'utente loggato dalla lista
+    const currentUser = req.user.id;
+    const filteredUsers = users.filter((u) => u.id !== currentUser);
+
+    res.json(filteredUsers);
+  } catch (error) {
+    console.error("Errore recupero utenti:", error);
+    res.status(500).json({ error: "Errore recupero lista utenti" });
+  }
+});
+
+// DELETE USER (eliminazione utente)
+router.delete("/delete", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Verifica se l'utente esiste
+    await db.oneOrNone("SELECT * FROM users WHERE id=$1", [userId]);
+
+    // Elimina l'utente
+    await db.none("DELETE FROM users WHERE id=$1", [userId]);
+
+    // Rimuove token dal sessionStorage (client-side)
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      sessionStorage.removeItem("token");
+    }
+
+    res.json({ message: "Utente eliminato con successo" });
+  } catch (error) {
+    console.error("Errore eliminazione utente:", error);
+    res.status(500).json({ error: "Errore eliminazione utente" });
+  }
+});
+
 export default router;
