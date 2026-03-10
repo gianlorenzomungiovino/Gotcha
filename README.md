@@ -8,9 +8,9 @@ Applicazione web full-stack per la gestione di chat in tempo reale, supportando 
 
 ```
 ┌────────────────┐      ┌─────────────────┐      ┌──────────────┐
-│   Frontend     │◀───▶│    Backend       │◀───▶│  Database     │
-│  (React SPA)   │      │(Express +        │      │PostgreSQL    │
-│                 │      │  Socket.IO)     │      │              │
+│   Frontend     │◀───▶│    Backend      │◀───▶│  Database     │
+│  (React SPA)   │      │(Express +       │      │PostgreSQL    │
+│                │      │  Socket.IO)     │      │              │
 └────────────────┘      └─────────────────┘      └──────────────┘
 ```
 
