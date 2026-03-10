@@ -55,7 +55,8 @@ export function useChat(convId) {
         // Trasforma i dati dal backend per matchare il formato frontend
         const formattedMessages = data.map((msg) => ({
           content: msg.text,
-          sender: msg.sender_id === user?.id ? "user" : "bot",
+          sender: msg.sender_id === user?.id ? "user" : "other",
+          sender_username: msg.sender_username,
         }));
 
         console.log("Formatted messages:", formattedMessages);
