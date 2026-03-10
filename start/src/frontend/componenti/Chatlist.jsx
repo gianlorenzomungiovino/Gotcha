@@ -39,7 +39,6 @@ export default function Chatlist() {
           <div className="chat-item-header">
             <strong>{conv.other_username}</strong>
           </div>
-
           <div className="chat-item-last">
             <span>{conv.last_message}</span>
             <small>
