@@ -45,34 +45,38 @@ export default function Login() {
   return (
     <div className="main-container">
       <form className="form" onSubmit={handleLogin}>
-        <label htmlFor="">Username:</label>
+        <label htmlFor="username">Username:</label>
         <input
           type="text"
           name="username"
+          id="username"
           onChange={handleChange}
           placeholder="Inserisci il tuo username.."
           required
+          className="input-text"
         />
-        <label htmlFor="">Password:</label>
+        <label htmlFor="password">Password:</label>
         <input
           type="password"
           name="password"
+          id="password"
           onChange={handleChange}
           placeholder="Inserisci la tua Password.."
           required
+          className="input-text"
         />
 
-        <button type="submit">Login</button>
+        <button type="submit" className="btn-primary">
+          Login
+        </button>
         <p>
           Non sei registrato?{" "}
-          <Link to="/register" style={{ color: "#F7A441" }}>
+          <Link to="/register" className="link-register">
             Registrati
           </Link>
         </p>
         {messaggio && (
-          <p className="err-msg" style={{ textAlign: "center" }}>
-            {messaggio}
-          </p>
+          <p className="err-msg">{messaggio}</p>
         )}
       </form>
     </div>

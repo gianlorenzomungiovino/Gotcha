@@ -77,6 +77,7 @@ export default function Register() {
           onChange={handleChange}
           value={data.username}
           required
+          className="input-text"
         />
 
         <label htmlFor="password">Password:</label>
@@ -88,19 +89,20 @@ export default function Register() {
           onChange={handleChange}
           value={data.password}
           required
+          className="input-text"
         />
 
         {message && (
           <p className={isError ? "err-msg" : "success-msg"}>{message}</p>
         )}
 
-        <button className="prosegui" disabled={isError} type="submit">
+        <button type="submit" disabled={isError} className="btn-primary">
           Avanti
         </button>
 
         <p>
           Hai già un account?{" "}
-          <Link to="/login" style={{ color: "#F7A441" }}>
+          <Link to="/login" className="link-register">
             Login
           </Link>
         </p>

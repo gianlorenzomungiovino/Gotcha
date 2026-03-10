@@ -66,14 +66,17 @@ Gotcha/
 - Socket.IO client: join-chat, new-message events ✅
 - UI Components: Login, Register, Chatlist, Chat, CreateChat, UserSettings ✅
 
-**Backend:**
+**Backend — completato:**
 - Express server with CORS ✅
-- Socket.IO server with room management ✅
+- Socket.IO server con broadcast messaggi ✅
 - PostgreSQL connection ✅
 - Auth routes (register/login) ✅
 - User routes (get list, delete account) ✅
 - Chat routes (create, get list) ✅
-- Message routes (send, get history) ✅
+- Message routes (send, get history con persistenza DB) ✅
+
+**Database:**
+- Schema Users, Conversations, Messages implementato ✅
 
 **Deployment:** Local development (npm run dev)
 
@@ -81,12 +84,11 @@ Gotcha/
 
 ## 🎯 Next Steps / TODO
 
-- [ ] Implementare endpoint per ottenere lista utenti
-- [ ] Completare logica socket.io per broadcast messaggi
-- [ ] Aggiungere persistenza messaggi nel database
-- [ ] Testare end-to-end flow con Postman
+- [ ] Testare end-to-end flow completo con Postman
 - [ ] Ottimizzare query database con indici
 - [ ] Aggiungere error handling centralizzato
+- [ ] Documentazione API completa
+- [ ] Setup ambiente di test/staging
 
 ---
 

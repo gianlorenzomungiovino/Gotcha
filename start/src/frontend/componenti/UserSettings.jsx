@@ -53,9 +53,7 @@ export default function UserSettings() {
     <div className="main-container">
       <h2>Impostazioni Utente</h2>
 
-      <div
-        style={{ padding: "20px", background: "#f9f9f9", borderRadius: "8px" }}
-      >
+      <div className="card-info">
         <h3>Dati del tuo account:</h3>
         <p>
           <strong>Username:</strong> {user?.username}
@@ -65,34 +63,23 @@ export default function UserSettings() {
         </p>
       </div>
 
-      <div
-        style={{
-          marginTop: "20px",
-          padding: "15px",
-          background: "#fff3cd",
-          borderRadius: "8px",
-          border: "1px solid #ffc107",
-        }}
-      >
-        <h4 style={{ margin: "0 0 10px 0", color: "#856404" }}>Attenzione</h4>
-        <p style={{ margin: 0, fontSize: "0.9em", color: "#856404" }}>
+      <div className="card-warning">
+        <h4>Attenzione</h4>
+        <p>
           L'eliminazione del tuo account rimuoverà definitivamente il tuo
           profilo dal sistema. Non potrai più accedere alla chat né creare nuove
           conversazioni.
         </p>
       </div>
 
-      <div style={{ marginTop: "20px" }}>
+      <div className="action-buttons">
         <button
           onClick={handleDeleteUser}
           className="btn-danger"
-          style={{ padding: "10px 20px", fontSize: "1em" }}
         >
           Elimina il mio Account
         </button>
-      </div>
 
-      <div style={{ marginTop: "15px" }}>
         <button
           onClick={() => {
             logout();
@@ -101,15 +88,14 @@ export default function UserSettings() {
             });
           }}
           className="btn-secondary"
-          style={{ padding: "10px 20px", fontSize: "1em" }}
         >
           Disconnetti (Logout)
         </button>
       </div>
 
-      <p style={{ marginTop: "15px", fontSize: "0.85em", color: "#666" }}>
+      <p>
         Oppure torna alla{" "}
-        <a href="/chatlist" style={{ color: "#007bff" }}>
+        <a href="/chatlist" className="link-back">
           lista delle chat
         </a>
       </p>

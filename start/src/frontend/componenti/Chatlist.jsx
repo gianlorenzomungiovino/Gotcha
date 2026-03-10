@@ -12,20 +12,9 @@ export default function Chatlist() {
 
   return (
     <div className="chat-list">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "15px",
-        }}
-      >
+      <div className="chat-header">
         <h3>Chat Recenti</h3>
-        <button
-          onClick={() => navigate("/create-chat")}
-          className="btn-primary"
-          style={{ fontSize: "0.9em" }}
-        >
+        <button onClick={() => navigate("/create-chat")} className="btn-primary">
           + Crea Nuova Chat
         </button>
       </div>
@@ -50,20 +39,9 @@ export default function Chatlist() {
         </div>
       ))}
 
-      <div
-        style={{
-          marginTop: "20px",
-          padding: "15px",
-          background: "#f8f9fa",
-          borderRadius: "8px",
-        }}
-      >
-        <h4 style={{ margin: "0 0 10px 0" }}>Impostazioni</h4>
-        <button
-          onClick={() => navigate("/settings")}
-          className="btn-secondary"
-          style={{ fontSize: "0.9em" }}
-        >
+      <div className="settings-section">
+        <h4>Impostazioni</h4>
+        <button onClick={() => navigate("/settings")} className="btn-secondary">
           Impostazioni Account
         </button>
       </div>

@@ -155,6 +155,7 @@ export default function CreateChat() {
             handleChange(e);
           }}
           required
+          className="input-text"
         />
 
         <div className="form-group">
@@ -205,13 +206,13 @@ export default function CreateChat() {
         </div>
 
         <h3>Seleziona Partecipanti:</h3>
-        <p style={{ fontSize: "0.9em", color: "#666" }}>
+        <p className="participants-hint">
           Clicca sugli utenti per selezionarli/deselezionarli
         </p>
 
         <div className="participants-list">
           {allUsers.map((u) => (
-            <label key={u.id} style={{ display: "block", marginBottom: "8px" }}>
+            <label key={u.id}>
               <input
                 type="checkbox"
                 name={`participant_${u.id}`}
@@ -232,23 +233,16 @@ export default function CreateChat() {
         <p className={isError ? "err-msg" : "success-msg"}>{message}</p>
       )}
 
-      <div
-        style={{
-          marginTop: "20px",
-          padding: "15px",
-          background: "#f5f5f5",
-          borderRadius: "8px",
-        }}
-      >
+      <div className="users-info">
         <h4>Utenti Disponibili ({allUsers.length})</h4>
-        <ul style={{ margin: 0, paddingLeft: "20px" }}>
+        <ul>
           {allUsers.map((u) => (
             <li key={u.id}>{u.username}</li>
           ))}
         </ul>
       </div>
 
-      <p style={{ marginTop: "15px", fontSize: "0.85em", color: "#888" }}>
+      <p className="note">
         Nota: L'utente loggato {user?.username} sarà automaticamente incluso
         come amministratore della chat.
       </p>

@@ -13,18 +13,13 @@ export function InputBox() {
     <div className="input-container">
       <span
         id="typing-msg"
-        style={{
-          opacity: isOtherUserTyping ? 0.9 : 0,
-          transition: "opacity 0.1s ease-in-out",
-          color: "black",
-        }}
+        className={isOtherUserTyping ? "visible" : ""}
       >
         {typingUser ? `${typingUser} sta scrivendo...` : ""}
       </span>
 
       <div className="input-btn-box">
         <input
-          className="input-text"
           type="text"
           placeholder="Messaggio"
           value={inputValue}
@@ -34,7 +29,6 @@ export function InputBox() {
           <img
             src="\send-message-svgrepo-com.svg"
             alt="Invio"
-            style={{ filter: "invert(100%)" }}
           />
         </button>
       </div>

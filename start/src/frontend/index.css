@@ -27,33 +27,6 @@ h1 {
   line-height: 1.1;
 }
 
-button {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  border: 1px solid transparent;
-  border-radius: 20px;
-  padding: 0.6em 0.6em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-button:active {
-  transform: scale(0.9);
-  opacity: 0.66;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-button img {
-  width: 20px;
-  height: 20px;
-}
-
 input {
   outline: none;
 }
