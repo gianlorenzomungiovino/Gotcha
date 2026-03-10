@@ -7,11 +7,11 @@ Applicazione web full-stack per la gestione di chat in tempo reale, supportando 
 ## 🏗️ Architettura
 
 ```
-┌───────────────┐     ┌─────────────────┐     ┌─────────────┐
-│   Frontend    │────▶│     Backend     │◀───▶│  Database   │
-│  (React SPA)  │     │(Express +       │     │PostgreSQL   │
-│               │     │  Socket.IO)     │     │             │
-└───────────────┘     └─────────────────┘     └─────────────┘
+┌────────────────┐      ┌─────────────────┐      ┌──────────────┐
+│   Frontend     │◀───▶│    Backend       │◀───▶│  Database     │
+│  (React SPA)   │      │(Express +        │      │PostgreSQL    │
+│                 │      │  Socket.IO)     │      │              │
+└────────────────┘      └─────────────────┘      └──────────────┘
 ```
 
 ### Stack Tecnologico
@@ -149,23 +149,6 @@ users ──1── conversation_participants ──N── conversations
 ---
 
 ## 🔐 Configurazione
-
-### Variabili d'Ambiente (.env)
-
-```bash
-# Database
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=gotcha_db
-DB_USER=postgres
-DB_PASSWORD=tua_password
-
-# JWT
-JWT_SECRET=tuo_segreto_jwt_very_secure
-
-# Server
-PORT=3000
-```
 
 ### Installazione
 
