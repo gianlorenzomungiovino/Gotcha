@@ -1,7 +1,15 @@
 /* ============================================
    BASE.CSS - Stili globali unificati
-   Reset, tipografia, componenti base e layout
+   Tailwind CSS v4 + Reset, tipografia, componenti base e layout
    ============================================ */
+
+/* Import Tailwind CSS v4 */
+@import "tailwindcss";
+
+/* Custom configuration for Tailwind v4 */
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
 
 /* ============================================
    RESET E STILI FONDAMENTALI

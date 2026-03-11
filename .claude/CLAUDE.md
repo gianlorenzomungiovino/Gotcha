@@ -25,6 +25,54 @@ The following context files are automatically loaded from the `.claude/` folder:
 - **No Claude signatures**: Commits should NOT include Claude Code attribution or Co-Authored-By lines
 - Use conventional commit format: `type(scope): description` (feat, fix, refactor, docs, style, etc.)
 
+## 🔴 CRITICAL SHELL COMMAND RULES
+
+### Rule 1: NEVER Use Chained Commands with `&&` or `;`
+
+**❌ FORBIDDEN:**
+```bash
+cd start && git status
+cd start && git add -A
+cd start && git commit -m "..."
+cd start && npm run dev
+```
+
+**❌ ALSO FORBIDDEN:**
+```bash
+git add -A ; git commit -m "..."
+cd start; git status
+```
+
+**✅ REQUIRED:**
+Execute commands as **separate, sequential calls**:
+```bash
+# Call 1: Change directory
+cd start
+
+# Call 2: Run git command (new tool call)
+git status
+
+# Call 3: Next operation (new tool call)
+git add -A
+```
+
+**Why This Rule Exists:**
+- Prevents triggering security mechanisms on **bare repositories**
+- Avoids compound commands that may bypass safety checks
+- Ensures each git/npm operation is explicitly approved per command
+- Maintains clear audit trail of each operation
+
+**Example Flow:**
+1. Claude: "Running `cd start`" → executes `cd start`
+2. Claude: "Now running `git status`" → executes `git status` (new call)
+3. Claude: "Ready for `git add`" → executes `git add -A` (new call)
+
+**This is a SECURITY STANDARD for the Gotcha project workflow.**
+
+---
+
+## Repository Structure
+
 ## 🔴 CRITICAL GIT RULES
 
 ### Rule 1: NEVER Auto-Commit or Auto-Push

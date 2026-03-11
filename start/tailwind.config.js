@@ -1,4 +1,8 @@
 /** @type {import('tailwindcss').Config} */
+// Nota: Tailwind CSS v4 non utilizza più tailwind.config.js per la maggior parte delle configurazioni.
+// Le personalizzazioni sono ora fatte direttamente nel file CSS con @theme.
+// Questo file è mantenuto per compatibilità con strumenti che potrebbero ancora leggerlo.
+
 export default {
   content: [
     "./pages/**/*.{js,ts,vue,jsx}",
