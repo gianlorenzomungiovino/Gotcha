@@ -131,3 +131,6 @@ Use `/commit` for complex sessions.
 ---
 
 **Last Updated:** 2026-03-10
+
+---
+**🔄 Aggiornamento Automatico:** Questi file vengono aggiornati automaticamente via pre-commit hook.
