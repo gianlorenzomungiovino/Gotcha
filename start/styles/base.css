@@ -27,7 +27,7 @@
   margin: 0 auto;
   font-weight: 350;
   text-align: center;
-  background-color: rgba(144, 238, 144, 0.5);
+  /* background-color rimosso - ogni componente avrà il suo colore */
 }
 
 /* ============================================
@@ -348,9 +348,9 @@ button:hover {
    ============================================ */
 
 .chat-list {
-  padding: 2rem;
-  max-width: 600px;
+  padding: 1rem;
   margin: 0 auto;
+  background-color: #ffffff;
 }
 
 .chat-item {
@@ -362,10 +362,12 @@ button:hover {
     transform 0.2s ease;
   margin-bottom: 0.5rem;
   text-align: left;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
 }
 
 .chat-item:hover {
-  background-color: #f0fdf4;
+  background-color: #f9fafb;
   transform: translateX(4px);
 }
 
@@ -564,7 +566,14 @@ button:hover {
 }
 
 .input-box button {
-  background-color: rgb(12 176 89);
+  background-color: #16a34a;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ============================================
@@ -650,8 +659,17 @@ button:hover {
     background-color: #1f2937;
   }
 
-  .chat-item:hover {
+  .chat-list {
     background-color: #1f2937;
+  }
+
+  .chat-item {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+
+  .chat-item:hover {
+    background-color: #374151;
   }
 
   .message-bubble.user {
