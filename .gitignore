@@ -1,0 +1,33 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/settings.json
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git hooks (gestiti manualmente)
+.git/hooks/*
+!git/hooks/commit-msg  # Mantiene commit-msg se esiste
+
+# Script di aggiornamento automatico (non commitare)
+.claude/update-context.sh
+.claude/update-context.ps1
+
+# Log files
+*.log

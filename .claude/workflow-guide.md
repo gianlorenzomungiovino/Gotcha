@@ -9,7 +9,7 @@ This guide explains how to manage development workflow and session documentation
 ### `.claude/` Directory (Claude's context files)
 - **`CLAUDE.md`** - Project overview, git rules (auto-loaded)
 - **`workflow-guide.md`** (this file) - Development workflow guidelines
-- **`session-report.md`** - Condensed session summaries (auto-loaded)
+- **`session-report.md`** - Session progress tracking (auto-loaded)
 
 ### Repository Files
 - **`start/`** - React/Vite frontend + Express backend (single git repo)

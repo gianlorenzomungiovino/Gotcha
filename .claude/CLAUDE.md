@@ -49,9 +49,11 @@ The following context files are automatically loaded from the `.claude/` folder:
 
 ```
 Gotcha/
-├── start/                          # Main application (separate git repo)
+├── start/                          # Main application (git repo)
 │   ├── src/
-│   │   ├── frontend/              # React/Vite app
+│   │   ├── frontend/              # React/Vite app + Tailwind CSS
+│   │   │   ├── main.jsx          # Entry point (import base.css)
+│   │   │   └── ...
 │   │   └── backend/               # Express.js API
 │   ├── public/
 │   ├── package.json
@@ -60,7 +62,7 @@ Gotcha/
 │   ├── CLAUDE.md                 # This file (auto-loaded)
 │   ├── workflow-guide.md         # Development workflow guide
 │   ├── session-report.md         # Session progress tracking
-│   └── token-monitor.md          # Token usage tracking
+│   └── settings.local.json       # Local Claude settings
 └── TEMPLATE.claude/               # Template files for reference
 ```
 
@@ -71,7 +73,7 @@ Gotcha/
 - React Router for navigation
 - Socket.IO client for real-time messaging
 - Context API for state management (AuthContext, ChatContext)
-- CSS modules and styled-components
+- **Tailwind CSS v4** per styling (unificato in `base.css`)
 
 **Backend:**
 - Express.js REST API

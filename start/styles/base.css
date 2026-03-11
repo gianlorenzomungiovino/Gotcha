@@ -1,4 +1,11 @@
-/* Base styles - Reset e stili fondamentali */
+/* ============================================
+   BASE.CSS - Stili globali unificati
+   Reset, tipografia, componenti base e layout
+   ============================================ */
+
+/* ============================================
+   RESET E STILI FONDAMENTALI
+   ============================================ */
 
 * {
   margin: 0;
@@ -15,7 +22,10 @@
   background-color: rgba(144, 238, 144, 0.5);
 }
 
-/* Tipografia */
+/* ============================================
+   TIPOGRAFIA
+   ============================================ */
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -74,7 +84,10 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Form elements base */
+/* ============================================
+   FORM ELEMENTS
+   ============================================ */
+
 label {
   display: block;
   margin-bottom: 0.25rem;
@@ -99,10 +112,11 @@ input:focus {
   box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
 }
 
-/* Button base styles */
+/* ============================================
+   BUTTONS
+   ============================================ */
+
 button {
-  /* width: 100%;
-  height: 2rem; */
   border-radius: 20px;
   padding: 0.6em 0.6em;
   font-size: 1em;
@@ -164,7 +178,10 @@ button:hover {
   background-color: #b91c1c;
 }
 
-/* Error/Success messages */
+/* ============================================
+   ERROR/SUCCESS MESSAGES
+   ============================================ */
+
 .err-msg {
   color: #dc2626;
   font-weight: 500;
@@ -181,7 +198,10 @@ button:hover {
   background-color: #f0fdf4;
 }
 
-/* Scrollbar hiding */
+/* ============================================
+   SCROLLBAR HIDING
+   ============================================ */
+
 .scroll-bottom-btn {
   display: flex;
   align-items: center;
@@ -200,7 +220,10 @@ button:hover {
   width: 15px;
 }
 
-/* Typing indicator */
+/* ============================================
+   TYPING INDICATOR
+   ============================================ */
+
 #typing-msg {
   padding: 0 25px;
   position: absolute;
@@ -220,7 +243,10 @@ button:hover {
   opacity: 0.9;
 }
 
-/* Main container */
+/* ============================================
+   MAIN CONTAINER
+   ============================================ */
+
 .main-container {
   min-height: 100vh;
   display: flex;
@@ -231,7 +257,10 @@ button:hover {
   background-color: #ffffff;
 }
 
-/* Form container */
+/* ============================================
+   FORM CONTAINER
+   ============================================ */
+
 .form {
   width: 100%;
   max-width: 400px;
@@ -261,9 +290,23 @@ button:hover {
   font-weight: 400;
   color: #374151;
   cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
 }
 
-/* Participants list */
+.form-group label:hover {
+  background-color: #e5e7eb;
+}
+
+.form-group input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+/* ============================================
+   PARTICIPANTS LIST
+   ============================================ */
+
 .participants-list {
   max-height: 200px;
   overflow-y: auto;
@@ -292,7 +335,10 @@ button:hover {
   margin: 0;
 }
 
-/* Chat list styles */
+/* ============================================
+   CHAT LIST STYLES
+   ============================================ */
+
 .chat-list {
   padding: 2rem;
   max-width: 600px;
@@ -326,7 +372,10 @@ button:hover {
   font-size: 0.9em;
 }
 
-/* Chat message styles */
+/* ============================================
+   CHAT MESSAGE STYLES
+   ============================================ */
+
 .msg-box {
   height: 92.5vh;
   display: flex;
@@ -384,32 +433,19 @@ button:hover {
   display: block;
 }
 
-.user-name-red {
-  color: #e74c3c;
-}
-.user-name-orange {
-  color: #e67e22;
-}
-.user-name-yellow {
-  color: #f1c40f;
-}
-.user-name-green {
-  color: #2ecc71;
-}
-.user-name-turquoise {
-  color: #1abc9c;
-}
-.user-name-blue {
-  color: #3498db;
-}
-.user-name-purple {
-  color: #9b59b6;
-}
-.user-name-pink {
-  color: #e91e63;
-}
+.user-name-red { color: #e74c3c; }
+.user-name-orange { color: #e67e22; }
+.user-name-yellow { color: #f1c40f; }
+.user-name-green { color: #2ecc71; }
+.user-name-turquoise { color: #1abc9c; }
+.user-name-blue { color: #3498db; }
+.user-name-purple { color: #9b59b6; }
+.user-name-pink { color: #e91e63; }
 
-/* Card styles */
+/* ============================================
+   CARD STYLES
+   ============================================ */
+
 .card-info {
   padding: 1.5rem;
   background-color: #f9fafb;
@@ -489,7 +525,10 @@ button:hover {
   margin-top: 1rem;
 }
 
-/* Layout styles */
+/* ============================================
+   CHAT BOX LAYOUT
+   ============================================ */
+
 .chat-box {
   display: flex;
   flex-direction: column;
@@ -520,7 +559,10 @@ button:hover {
   background-color: rgb(12 176 89);
 }
 
-/* Message container */
+/* ============================================
+   MESSAGES CONTAINER
+   ============================================ */
+
 .messages-container {
   height: 92.5vh;
   display: flex;
@@ -529,7 +571,10 @@ button:hover {
   padding-bottom: 100px;
 }
 
-/* Full screen layout */
+/* ============================================
+   FULL SCREEN LAYOUT
+   ============================================ */
+
 .chat-layout {
   display: flex;
   flex-direction: column;
@@ -574,4 +619,62 @@ button:hover {
 
 .input-area button:active {
   transform: scale(0.95);
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  #root {
+    background-color: #242424;
+  }
+
+  .main-container {
+    background-color: #1f2937;
+  }
+
+  .form.registrazione {
+    background-color: #1f2937;
+  }
+
+  .participants-list {
+    background-color: #1f2937;
+  }
+
+  .chat-item:hover {
+    background-color: #1f2937;
+  }
+
+  .message-bubble.user {
+    background-color: #14532d;
+  }
+
+  .message-bubble.other {
+    background-color: #374151;
+  }
+
+  .msg-box::-webkit-scrollbar-track {
+    background: #1f2937;
+  }
+
+  .msg-box::-webkit-scrollbar-thumb {
+    background: #4b5563;
+  }
+
+  .msg-box::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
+
+  .card-info {
+    background-color: #1f2937;
+  }
+
+  .settings-section {
+    background-color: #1f2937;
+  }
+
+  .users-info {
+    background-color: #1f2937;
+  }
 }

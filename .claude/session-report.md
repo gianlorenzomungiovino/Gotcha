@@ -1,6 +1,6 @@
 # Gotcha - Session Context
 
-**Last Updated:** 2026-03-10 (Session 1 - configurazione CLAUDE.md)
+**Last Updated:** 2026-03-10 (Session N - Tailwind CSS + Import cleanup)
 **Project:** Gotcha (Real-time Chat Application)
 
 ---
@@ -37,6 +37,11 @@ Gotcha/
 - AuthContext (authentication state)
 - ChatContext (chat message state)
 
+**Styling:**
+- Tailwind CSS v4 unificato in `base.css` ✅
+- Import corretti verificati in `main.jsx` ✅
+- File CSS ridondanti eliminati (`theme.css`, `layout.css`) ✅
+
 **Backend Features:**
 - REST API routes: /api/auth, /api/users, /api/chats, /api/messages
 - Socket.IO rooms per conversation
@@ -65,6 +70,7 @@ Gotcha/
 - ChatContext: message sending/receiving via Socket.IO ✅
 - Socket.IO client: join-chat, new-message events ✅
 - UI Components: Login, Register, Chatlist, Chat, CreateChat, UserSettings ✅
+- Tailwind CSS integrato e import corretti ✅
 
 **Backend — completato:**
 - Express server with CORS ✅
@@ -84,11 +90,10 @@ Gotcha/
 
 ## 🎯 Next Steps / TODO
 
-- [ ] Testare end-to-end flow completo con Postman
-- [ ] Ottimizzare query database con indici
-- [ ] Aggiungere error handling centralizzato
-- [ ] Documentazione API completa
-- [ ] Setup ambiente di test/staging
+- [ ] Miglioramenti UI: margini, pulsanti indietro, lista conversazioni
+- [ ] Supporto allegati e immagini
+- [ ] Implementare crittografia end-to-end (E2EE)
+- [ ] Preparazione backend per AI Ollama
 
 ---
 

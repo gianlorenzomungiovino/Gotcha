@@ -45,10 +45,7 @@ export default function Chat() {
         className="messages-container"
       >
         {messages.map((msg, index) => (
-          <span
-            key={index}
-            className={`message-bubble ${msg.sender}`}
-          >
+          <span key={index} className={`message-bubble ${msg.sender}`}>
             {msg.sender === "other" && msg.sender_username && (
               <div
                 className="message-username"
@@ -61,15 +58,14 @@ export default function Chat() {
           </span>
         ))}
       </div>
-      <button
-        onClick={handleScrollBtn}
-        className="scroll-bottom-btn"
-      >
-        <img
-          id="scroll-bottom-arrow"
-          src="\down-arrow-download-svgrepo-com.svg"
-        />
-      </button>
+      {isAtBottom || (
+        <button onClick={handleScrollBtn} className="scroll-bottom-btn">
+          <img
+            id="scroll-bottom-arrow"
+            src="\down-arrow-download-svgrepo-com.svg"
+          />
+        </button>
+      )}
       <InputBox />
     </div>
   );

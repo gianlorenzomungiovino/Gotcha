@@ -16,7 +16,7 @@ Applicazione web full-stack per la gestione di chat in tempo reale, supportando 
 
 ### Stack Tecnologico
 
-- **Frontend**: React 18 + Hooks + React Router DOM
+- **Frontend**: React 18 + Hooks + React Router DOM + Tailwind CSS
 - **Backend**: Node.js + Express.js
 - **Real-time**: Socket.IO
 - **Database**: PostgreSQL con pg-promise
@@ -174,6 +174,65 @@ npm run dev
    - Gruppo: con titolo, gestione partecipanti
 4. **Scambio Messaggi**: Real-time via WebSocket
 5. **Impostazioni**: Gestione profilo utente
+
+---
+
+## 🎨 Styling con Tailwind CSS
+
+### Configurazione
+
+Tailwind CSS v4 è configurato per supportare sia React che Vue:
+
+```bash
+# Installa dipendenze
+npm install
+
+# Avvia sviluppo
+npm run dev
+```
+
+### Come Usare Tailwind nei Componenti
+
+**React:**
+```jsx
+import { tailwindUtilities } from './tailwind-utilities'
+
+function MyComponent() {
+  return (
+    <div className={tailwindUtilities.colors.primary[500]}>
+      Hello Tailwind!
+    </div>
+  )
+}
+```
+
+**Vue:**
+```vue
+<template>
+  <div :class="tailwindUtilities.colors.primary[500]">
+    Hello Tailwind!
+  </div>
+</template>
+
+<script setup>
+import { tailwindUtilities } from './tailwind-utilities'
+</script>
+```
+
+### Utility Class Disponibili
+
+- **Spaziatura**: `pt-4`, `pb-2`, `ml-8`, ecc.
+- **Display**: `block`, `flex`, `grid`, `hidden`
+- **Colori**: `primary-500`, `gray-700`, ecc.
+- **Typography**: `text-sm`, `font-bold`, `text-center`
+- **Border Radius**: `rounded-lg`, `rounded-full`
+- **Shadows**: `shadow-md`, `shadow-lg`
+
+### File di Configurazione
+
+- `tailwind.config.js`: Estensioni personalizzate (colori, font)
+- `postcss.config.js`: Plugin PostCSS per Tailwind e Autoprefixer
+- `base.css`: Stili globali unificati
 
 ---
 
