@@ -9,7 +9,8 @@
       "Bash(echo \"test\" > /tmp/test.txt && git add .claude/session-report.md && git commit -m \"chore: test commit\" 2>&1 | head -20)",
       "Bash(powershell -Command \"Get-Date -Format 'yyyy-MM-dd HH:mm:ss'\")",
       "Skill(gsd:resume-work)",
-      "Bash(cd \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\start\" && npm run build 2>&1 | head -50)"
+      "Bash(cd \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\start\" && npm run build 2>&1 | head -50)",
+      "Bash(chmod +x \".git/hooks/pre-commit\")"
     ]
   }
 }
