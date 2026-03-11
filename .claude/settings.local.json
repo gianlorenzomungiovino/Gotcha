@@ -5,7 +5,8 @@
       "Bash(chmod +x \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\.git\\\\hooks\\\\pre-commit\" && cp \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\.git\\\\hooks\\\\pre-commit\" \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\.git/hooks/pre-commit\")",
       "Bash(chmod +x \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\.git\\\\hooks\\\\pre-commit\" && ls -la \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\.git\\\\hooks\\\\pre-commit\")",
       "Bash(git add:*)",
-      "Bash(cp \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\.git\\\\hooks\\\\pre-commit\" \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\.git/hooks/pre-commit\" && chmod +x \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\.git\\\\hooks\\\\pre-commit\")"
+      "Bash(cp \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\.git\\\\hooks\\\\pre-commit\" \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\.git/hooks/pre-commit\" && chmod +x \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\.git\\\\hooks\\\\pre-commit\")",
+      "Bash(echo \"test\" > /tmp/test.txt && git add .claude/session-report.md && git commit -m \"chore: test commit\" 2>&1 | head -20)"
     ]
   }
 }
