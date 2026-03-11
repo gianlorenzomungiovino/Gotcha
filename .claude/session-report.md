@@ -4,18 +4,17 @@
 - **Project**: Gotcha (Real-time chat application)
 - **Frontend**: React 18 + Vite + Tailwind CSS v4
 - **Backend**: Express.js + Socket.IO + PostgreSQL
-- **Branch**: getBranch()
+- **Branch**: develop
 
 ---
 
 ## Recent Changes
 
-### Session 1 - Modifiche varie
+### Session 2 - .claude/session-report.md
 **Date**: 2026-03-11
 
 #### Files Changed:
 - `.claude/session-report.md`
-- `.claude/settings.local.json`
 
 ---
 

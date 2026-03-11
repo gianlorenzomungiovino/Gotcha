@@ -91,7 +91,7 @@ export default function CreateChat() {
       if (event.target.createPrivate.checked) {
         // Chat privata 1-to-1 con un altro utente
         const otherUserId = participants[0]?.id;
-        res = await fetch("http://localhost:3001/conversation/private", {
+        res = await fetch("http://localhost:3001/conversations/private", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -102,7 +102,7 @@ export default function CreateChat() {
       } else {
         // Chat di gruppo
         const participantIds = participants.map((p) => p.id);
-        res = await fetch("http://localhost:3001/conversation/group", {
+        res = await fetch("http://localhost:3001/conversations/group", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
