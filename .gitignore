@@ -29,5 +29,8 @@ Thumbs.db
 .claude/update-context.sh
 .claude/update-context.ps1
 
+# Ambiente virtuale Python (usa Node.js invece)
+.venv/
+
 # Log files
 *.log
