@@ -10,13 +10,11 @@
 
 ## Recent Changes
 
-### Session 6 - Modifiche varie
+### Session 7 - Modifiche varie
 **Date**: 2026-03-12
 
 #### Files Changed:
-`.claude/session-report.md`
-`.claude/settings.local.json`
-`.gitignore`
+.claude/settings.local.json.planning/todos/pending/2026-03-12-aggiungi-navigazione-crittografia-allegati-ai-riassunto.md
 
 ---
 
