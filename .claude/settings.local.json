@@ -15,7 +15,8 @@
       "Bash(move .git/hooks/pre-commit .git/hooks/pre-commit.ps1 && ls .git/hooks/*.ps1)",
       "Bash(mv .git/hooks/pre-commit .git/hooks/pre-commit.ps1 && ls .git/hooks/*.ps1)",
       "Bash(powershell -ExecutionPolicy Bypass -File .git/hooks/pre-commit.ps1 2>&1)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" commit \"docs: capture future features todo\" --files .planning/todos/pending/2026-03-12-aggiungi-navigazione-crittografia-allegati-ai-riassunto.md)"
     ]
   }
 }

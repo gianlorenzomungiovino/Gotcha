@@ -1,5 +1,6 @@
 import useAuth from "../../contesti/useAuth";
 import { useNavigate } from "react-router-dom";
+import { BackButton } from "./BackButton";
 
 export default function UserSettings() {
   const { user, logout } = useAuth();
@@ -51,7 +52,12 @@ export default function UserSettings() {
 
   return (
     <div className="main-container">
-      <h2>Impostazioni Utente</h2>
+      <div className="chat-header">
+        <div className="header-content">
+          <BackButton onClick={() => window.location.href = "/chatlist"} />
+          <h2>Impostazioni Utente</h2>
+        </div>
+      </div>
 
       <div className="card-info">
         <h3>Dati del tuo account:</h3>
@@ -73,10 +79,7 @@ export default function UserSettings() {
       </div>
 
       <div className="action-buttons">
-        <button
-          onClick={handleDeleteUser}
-          className="btn-danger"
-        >
+        <button onClick={handleDeleteUser} className="btn-danger">
           Elimina il mio Account
         </button>
 
@@ -92,13 +95,6 @@ export default function UserSettings() {
           Disconnetti (Logout)
         </button>
       </div>
-
-      <p>
-        Oppure torna alla{" "}
-        <a href="/chatlist" className="link-back">
-          lista delle chat
-        </a>
-      </p>
     </div>
   );
 }

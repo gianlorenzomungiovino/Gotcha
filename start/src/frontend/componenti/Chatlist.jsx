@@ -14,8 +14,11 @@ export default function Chatlist() {
     <div className="chat-list">
       <div className="chat-header">
         <h3>Chat Recenti</h3>
-        <button onClick={() => navigate("/create-chat")} className="btn-primary">
-          + Crea Nuova Chat
+        <button
+          onClick={() => navigate("/create-chat")}
+          className="btn-primary"
+        >
+          + Nuova Chat
         </button>
       </div>
 

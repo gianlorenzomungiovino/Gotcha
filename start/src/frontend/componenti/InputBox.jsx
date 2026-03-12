@@ -11,10 +11,7 @@ export function InputBox() {
 
   return (
     <div className="input-container">
-      <span
-        id="typing-msg"
-        className={isOtherUserTyping ? "visible" : ""}
-      >
+      <span id="typing-msg" className={isOtherUserTyping ? "visible" : ""}>
         {typingUser ? `${typingUser} sta scrivendo...` : ""}
       </span>
 
@@ -24,12 +21,10 @@ export function InputBox() {
           placeholder="Messaggio"
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)}
+          autoFocus
         />
         <button onClick={handleSubmit}>
-          <img
-            src="\send-message-svgrepo-com.svg"
-            alt="Invio"
-          />
+          <img src="/send-message-svgrepo-com.svg" alt="Invio" />
         </button>
       </div>
     </div>

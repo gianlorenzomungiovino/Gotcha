@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import useAuth from "../../contesti/useAuth";
 import { useNavigate } from "react-router-dom";
+import { BackButton } from "./BackButton";
 
 export default function CreateChat() {
   const { user } = useAuth();
@@ -128,9 +129,6 @@ export default function CreateChat() {
 
       setMessage("Chat creata con successo!");
       setIsError(false);
-
-      // Reindirizza alla lista chat dopo un breve ritardo
-      setTimeout(() => navigate("/chatlist"), 1500);
     } catch (error) {
       console.error("Errore create chat:", error);
       setMessage(error.message);
@@ -140,7 +138,12 @@ export default function CreateChat() {
 
   return (
     <div className="main-container">
-      <h2>Crea Nuova Chat</h2>
+      <div className="chat-header">
+        <div className="header-content">
+          <BackButton onClick={() => window.location.href = "/chatlist"} />
+          <h2>Crea Nuova Chat</h2>
+        </div>
+      </div>
 
       <form onSubmit={handleCreateChat}>
         <label htmlFor="title">Titolo della chat:</label>

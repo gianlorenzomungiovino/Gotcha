@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useChat } from "../hooks/useChat";
 import { InputBox } from "./InputBox";
+import { BackButton } from "./BackButton";
 
 // Pool di colori per i nomi utente
 const USER_COLORS = [
@@ -39,6 +40,11 @@ export default function Chat() {
 
   return (
     <div className="chat-layout">
+      <div className="chat-header">
+        <BackButton onClick={() => window.location.href = "/chatlist"} />
+        <h3>Chat con {convId}</h3>
+      </div>
+
       <div
         ref={chatBoxRef}
         onScroll={handleScrollBottom}
@@ -62,7 +68,7 @@ export default function Chat() {
         <button onClick={handleScrollBtn} className="scroll-bottom-btn">
           <img
             id="scroll-bottom-arrow"
-            src="\down-arrow-download-svgrepo-com.svg"
+            src="/down-arrow-download-svgrepo-com.svg"
           />
         </button>
       )}
