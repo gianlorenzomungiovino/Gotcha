@@ -10,15 +10,13 @@
 
 ## Recent Changes
 
-### Session 3 - Modifiche varie
-**Date**: 2026-03-11
+### Session 6 - Modifiche varie
+**Date**: 2026-03-12
 
 #### Files Changed:
-- `.claude/session-report.md`
-- `start/src/frontend/componenti/CreateChat.jsx`
-
----
-
+`.claude/session-report.md`
+`.claude/settings.local.json`
+`.gitignore`
 
 ---
 

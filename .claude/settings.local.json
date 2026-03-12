@@ -10,7 +10,12 @@
       "Bash(powershell -Command \"Get-Date -Format 'yyyy-MM-dd HH:mm:ss'\")",
       "Skill(gsd:resume-work)",
       "Bash(cd \"D:\\\\Gianlorenzo\\\\Documents\\\\Sviluppo\\\\Gotcha\\\\start\" && npm run build 2>&1 | head -50)",
-      "Bash(chmod +x \".git/hooks/pre-commit\")"
+      "Bash(chmod +x \".git/hooks/pre-commit\")",
+      "Bash(powershell -File .git/hooks/pre-commit 2>&1)",
+      "Bash(move .git/hooks/pre-commit .git/hooks/pre-commit.ps1 && ls .git/hooks/*.ps1)",
+      "Bash(mv .git/hooks/pre-commit .git/hooks/pre-commit.ps1 && ls .git/hooks/*.ps1)",
+      "Bash(powershell -ExecutionPolicy Bypass -File .git/hooks/pre-commit.ps1 2>&1)",
+      "Bash(git reset:*)"
     ]
   }
 }

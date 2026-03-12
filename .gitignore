@@ -24,6 +24,7 @@ Thumbs.db
 # Git hooks (gestiti manualmente)
 .git/hooks/*
 !git/hooks/commit-msg  # Mantiene commit-msg se esiste
+!.git/hooks/pre-commit.ps1  # Hook per session-report
 
 # Script di aggiornamento automatico (non commitare)
 .claude/update-context.sh
