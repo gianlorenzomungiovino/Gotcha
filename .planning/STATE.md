@@ -133,12 +133,12 @@ Fase 9: Advanced Features           → 📋 Future
 
 | Date | Changes | Author |
 |------|---------|--------|
+| 2026-03-13 | Reazioni emoji: implementazione completa (API + UI + backend reactions table) | gianlorenzomungiovino |
+| 2026-03-13 | Aggiunta setCurrentConversation al ChatContext per tracciare chat attiva | gianlorenzomungiovino |
 | 2026-03-12 | Init GSD structure - PROJECT, ROADMAP, STATE created | gianlorenzomungiovino |
 | 2026-03-12 | Aggiunta Fase 10 (Advanced Features) + nuovi task: messaggi non letti, swipe gestures, crittografia E2EE, allegati, AI Ollama | gianlorenzomungiovino |
 | 2026-03-12 | Task creation: 7 tasks creati per advanced features | gianlorenzomungiovino |
 | 2026-03-12 | Swipe gestures mobile: implementazione base completa in Chatlist.jsx | gianlorenzomungiovino |
-| 2026-03-12 | Reazioni emoji: implementazione completa (API + UI + backend reactions table) | gianlorenzomungiovino |
-| 2026-03-12 | Aggiunta setCurrentConversation al ChatContext per tracciare chat attiva | gianlorenzomungiovino |
 
 ---
 
