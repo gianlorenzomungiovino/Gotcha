@@ -261,6 +261,13 @@ Questo documento definisce le fasi di sviluppo del progetto Gotcha con relativi 
 - Overlay con opzioni: box rosso (elimina) / box verde (segna come letti)
 - Integrazione con touch events e mouse emulation
 
+#### 10.7 ✅ **Reazioni Emoji ai Messaggi** (COMPLETATO)
+- Endpoint API `GET /messages/:id/reaction` per ottenere reazioni
+- Endpoint API `POST /messages/:id/reaction` per aggiungere/togliere reazione
+- UI: click su emoji nei messaggi esistenti → toggle reazione
+- Backend: tabella `reactions` con conv_id, msg_id, emoji, created_at
+- Frontend: componente Reactions.jsx con gestione click emoji
+
 #### 10.3 **Crittografia End-to-End (E2EE)**
 - Implementazione crittografia messaggi con `crypto-js` (AES-GCM)
 - Key exchange sicuro tra utenti

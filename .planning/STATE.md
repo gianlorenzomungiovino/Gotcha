@@ -31,14 +31,16 @@ Questo file traccia lo stato corrente del progetto, i progressi raggiunti e le a
 
 ### Sessione in Corso (2026-03-12)
 
+**Task completati oggi**:
+- ✅ Reazioni emoji ai messaggi: implementazione completa (endpoint API + UI + backend reactions table)
+- ✅ setCurrentConversation: aggiunta al ChatContext per tracciare chat attiva
+- ✅ Cleanup: rimozione setConversationMessages non necessario
+
 **Task in lavorazione**:
-- ✅ Swipe gestures mobile: implementazione base completa, manca overlay options
 - 🔜 Messaggi non letti con badge: broadcasting Socket.IO da implementare
 - 🔜 E2EE con Web Crypto API: da pianificare
 - 🔜 AI suggestions placeholder: UI placeholder da creare
-- 🔜 Read receipts e double check: Socket.IO events da aggiungere
 - 🔜 Upload allegati file: drag-drop + file picker
-- 🔜 Reazioni emoji ai messaggi: già parzialmente implementato
 
 ### Stato del Progetto (GSD Phases)
 
@@ -135,6 +137,8 @@ Fase 9: Advanced Features           → 📋 Future
 | 2026-03-12 | Aggiunta Fase 10 (Advanced Features) + nuovi task: messaggi non letti, swipe gestures, crittografia E2EE, allegati, AI Ollama | gianlorenzomungiovino |
 | 2026-03-12 | Task creation: 7 tasks creati per advanced features | gianlorenzomungiovino |
 | 2026-03-12 | Swipe gestures mobile: implementazione base completa in Chatlist.jsx | gianlorenzomungiovino |
+| 2026-03-12 | Reazioni emoji: implementazione completa (API + UI + backend reactions table) | gianlorenzomungiovino |
+| 2026-03-12 | Aggiunta setCurrentConversation al ChatContext per tracciare chat attiva | gianlorenzomungiovino |
 
 ---
 
