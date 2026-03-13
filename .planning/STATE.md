@@ -29,18 +29,29 @@ Questo file traccia lo stato corrente del progetto, i progressi raggiunti e le a
 - ❌ **`.claude/session-report.md` eliminato** - Ridondante con STATE.md
 - ❌ **Hook `pre-commit` rimosso** - Non serve più aggiornare session report manualmente
 
+### Sessione in Corso (2026-03-12)
+
+**Task in lavorazione**:
+- ✅ Swipe gestures mobile: implementazione base completa, manca overlay options
+- 🔜 Messaggi non letti con badge: broadcasting Socket.IO da implementare
+- 🔜 E2EE con Web Crypto API: da pianificare
+- 🔜 AI suggestions placeholder: UI placeholder da creare
+- 🔜 Read receipts e double check: Socket.IO events da aggiungere
+- 🔜 Upload allegati file: drag-drop + file picker
+- 🔜 Reazioni emoji ai messaggi: già parzialmente implementato
+
 ### Stato del Progetto (GSD Phases)
 
 ```
-Fase 1: Authentication & Setup      → 🔜 Imminente (backend setup esistente)
+Fase 1: Authentication & Setup      → ✅ Completa (backend setup esistente)
 Fase 2: User Management             → ⏸️  In Pausa
 Fase 3: Chat Rooms & Rooms API      → ⏸️  In Pausa
 Fase 4: Messages & Broadcasting     → ⏸️  In Pausa
 Fase 5: Frontend Authentication     → ⏸️  In Pausa
-Fase 6: User Dashboard & Chat List  → ⏸️  In Pausa
+Fase 6: User Dashboard & Chat List  → ✅ Completa (frontend base)
 Fase 7: Chat Interface              → ⏸️  In Pausa
 Fase 8: User Management UI          → ⏸️  In Pausa
-Fase 9: Advanced Features           → ⏸️  Future
+Fase 9: Advanced Features           → 📋 Future
 ```
 
 **Legenda**:
@@ -110,9 +121,9 @@ Fase 9: Advanced Features           → ⏸️  Future
 
 | Metrica | Target | Attuale | Trend |
 |---------|--------|---------|-------|
-| GSD Phases Complete | N/A | 0/9 | 🟡 Start |
+| GSD Phases Complete | N/A | 1/9 | 🟢 Progress |
 | Files GSD Created | 3 | 3 ✅ | ✅ Done |
-| Roadmap Mapped | Full | 9/9 ✅ | ✅ Done |
+| Roadmap Mapped | Full | 10/10 ✅ | ✅ Done |
 
 ---
 
@@ -122,3 +133,11 @@ Fase 9: Advanced Features           → ⏸️  Future
 |------|---------|--------|
 | 2026-03-12 | Init GSD structure - PROJECT, ROADMAP, STATE created | gianlorenzomungiovino |
 | 2026-03-12 | Aggiunta Fase 10 (Advanced Features) + nuovi task: messaggi non letti, swipe gestures, crittografia E2EE, allegati, AI Ollama | gianlorenzomungiovino |
+| 2026-03-12 | Task creation: 7 tasks creati per advanced features | gianlorenzomungiovino |
+| 2026-03-12 | Swipe gestures mobile: implementazione base completa in Chatlist.jsx | gianlorenzomungiovino |
+
+---
+
+## Current Session Work
+
+**Inizio lavoro su**: Implementazione overlay swipe con opzioni (elimina room / segna come letti)

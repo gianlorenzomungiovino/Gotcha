@@ -1,7 +1,9 @@
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useChat } from "../hooks/useChat";
 import { InputBox } from "./InputBox";
 import { BackButton } from "./BackButton";
+import { useChatContext } from "./ChatContext";
 
 // Pool di colori per i nomi utente
 const USER_COLORS = [
@@ -28,6 +30,45 @@ function getUserNameColor(username) {
   return USER_COLORS[hash % USER_COLORS.length];
 }
 
+// Componente per le reazioni ai messaggi
+function MessageReactions({ reactions, onReaction }) {
+  const reactionEmojis = {
+    like: "👍",
+    love: "❤️",
+    laugh: "😂",
+    wow: "😮",
+    sad: "😢",
+    angry: "😠",
+    hmmm: "🤔",
+  };
+
+  const handleReactionClick = (reaction) => {
+    if (!reactions[reaction]) {
+      reactions[reaction] = 0;
+    }
+    onReaction(reaction);
+  };
+
+  return (
+    <div className="message-reactions">
+      {Object.entries(reactions).map(([reaction, count]) => {
+        const emoji = reactionEmojis[reaction] || "😊";
+        return (
+          <button
+            key={reaction}
+            className={`reaction-btn ${count > 0 ? "active" : ""}`}
+            data-reaction={reaction}
+            onClick={() => handleReactionClick(reaction)}
+          >
+            {emoji}
+            {count > 0 && <span className="reaction-count">{count}</span>}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function Chat() {
   const { convId } = useParams();
   const {
@@ -37,12 +78,89 @@ export default function Chat() {
     handleScrollBottom,
     handleScrollBtn,
   } = useChat(convId);
+  const { reactions, toggleReaction } = useChatContext();
+
+  // Recupera le reazioni per questa conversazione
+  const [conversationReactions, setConversationReactions] = useState([]);
+
+  useEffect(() => {
+    const fetchReactions = async () => {
+      try {
+        const token = sessionStorage.getItem("token");
+        const res = await fetch(
+          `http://localhost:3001/messages/${convId}/reaction`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setConversationReactions(data.reactions || []);
+        }
+      } catch (err) {
+        console.error("Errore fetch reazioni:", err);
+      }
+    };
+
+    if (convId) {
+      fetchReactions();
+    }
+  }, [convId]);
+
+  // Recupera le reazioni per ogni messaggio
+  const [messageReactions, setMessageReactions] = useState({});
+
+  useEffect(() => {
+    const fetchMessageReactions = async () => {
+      try {
+        const token = sessionStorage.getItem("token");
+        const res = await fetch(
+          `http://localhost:3001/messages/${convId}/reaction`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        if (res.ok) {
+          const data = await res.json();
+          // Organizza le reazioni per messaggio
+          const reactionsByMessage = {};
+          data.reactions?.forEach((r) => {
+            if (!reactionsByMessage[r.messageId]) {
+              reactionsByMessage[r.messageId] = {};
+            }
+            reactionsByMessage[r.messageId][r.reaction] =
+              (reactionsByMessage[r.messageId][r.reaction] || 0) + 1;
+          });
+          setMessageReactions(reactionsByMessage);
+        }
+      } catch (err) {
+        console.error("Errore fetch reazioni messaggi:", err);
+      }
+    };
+
+    if (convId) {
+      fetchMessageReactions();
+    }
+  }, [convId]);
 
   return (
     <div className="chat-layout">
       <div className="chat-header">
         <BackButton onClick={() => window.location.href = "/chatlist"} />
         <h3>Chat con {convId}</h3>
+
+        {/* Reazioni alla conversazione */}
+        {conversationReactions.length > 0 && (
+          <div className="conversation-reactions">
+            <span className="reactions-label">Reazioni:</span>
+            {conversationReactions.map((emoji) => (
+              <span
+                key={emoji}
+                onClick={() => toggleReaction(convId, emoji)}
+                title={`Rimuovi reazione ${emoji}`}
+                className="reaction-emoji"
+              >
+                {emoji}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       <div
@@ -61,6 +179,21 @@ export default function Chat() {
               </div>
             )}
             {msg.content}
+
+            {/* Reazioni al messaggio */}
+            {messageReactions[msg.id] && (
+              <MessageReactions
+                reactions={messageReactions[msg.id]}
+                onReaction={(reaction) =>
+                  toggleReaction(msg.id, reaction)
+                }
+              />
+            )}
+
+            {/* Read Receipts - doppio check */}
+            {msg.sender === "other" && (
+              <span className="read-receipt">✓✓</span>
+            )}
           </span>
         ))}
       </div>

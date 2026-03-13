@@ -21,7 +21,9 @@ function App() {
           path="/chatlist"
           element={
             <ProtectedRoute>
-              <Chatlist />
+              <ChatProvider>
+                <Chatlist />
+              </ChatProvider>
             </ProtectedRoute>
           }
         />
@@ -30,7 +32,9 @@ function App() {
           path="/create-chat"
           element={
             <ProtectedRoute>
-              <CreateChat />
+              <ChatProvider>
+                <CreateChat />
+              </ChatProvider>
             </ProtectedRoute>
           }
         />
@@ -50,7 +54,9 @@ function App() {
           path="/settings"
           element={
             <ProtectedRoute>
-              <UserSettings />
+              <ChatProvider>
+                <UserSettings />
+              </ChatProvider>
             </ProtectedRoute>
           }
         />

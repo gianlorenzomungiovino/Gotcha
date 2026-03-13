@@ -4,7 +4,7 @@ import useAuth from "../../contesti/useAuth";
 import io from "socket.io-client";
 
 export function useInputBox() {
-  const { addMessage, conversationId } = useChatContext();
+  const { addMessage, conversationId, incrementUnread } = useChatContext();
   const { user } = useAuth();
   const [inputValue, setInputValue] = useState("");
   const typingUserState = useState(null);
@@ -47,15 +47,22 @@ export function useInputBox() {
         const formattedMessage = {
           content: message.text,
           sender: message.sender_id === user.id ? "user" : "bot",
+          encrypted: message.encrypted || false,
         };
         addMessage(formattedMessage.content, formattedMessage.sender);
+        incrementUnread(); // Incrementa non letti quando arriva messaggio
+      });
+
+      // Listen for reactions
+      socket.on("reaction_added", (data) => {
+        console.log("Reaction added:", data);
       });
 
       return () => {
         socket.disconnect();
       };
     }
-  }, [conversationId, user, addMessage]);
+  }, [conversationId, user, addMessage, incrementUnread]);
 
   const handleInputChange = (value) => {
     setInputValue(value);
