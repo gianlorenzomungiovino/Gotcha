@@ -7,7 +7,7 @@ export function useInputBox() {
   const { addMessage, conversationId, incrementUnread } = useChatContext();
   const { user } = useAuth();
   const [inputValue, setInputValue] = useState("");
-  const typingUserState = useState(null);
+  const [typingUser, setTypingUser] = useState(null);
   const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
   const socketRef = useRef(null);
   const typingTimeoutRef = useRef(null);
@@ -30,14 +30,14 @@ export function useInputBox() {
       socket.on("user_typing", (data) => {
         if (data.user_id !== user.id) {
           setIsOtherUserTyping(true);
-          typingUserState[1](data.username);
+          setTypingUser(data.username);
         }
       });
 
       socket.on("user_stop_typing", (data) => {
         if (data.user_id !== user.id) {
           setIsOtherUserTyping(false);
-          typingUserState[1](null);
+          setTypingUser(null);
         }
       });
 
@@ -141,7 +141,7 @@ export function useInputBox() {
     inputValue,
     setInputValue: handleInputChange,
     isOtherUserTyping,
-    typingUser: typingUserState[1],
+    typingUser,
     handleSubmit,
   };
 }

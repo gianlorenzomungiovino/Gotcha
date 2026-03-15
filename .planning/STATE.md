@@ -35,6 +35,7 @@ Questo file traccia lo stato corrente del progetto, i progressi raggiunti e le a
 - ✅ Reazioni emoji ai messaggi: implementazione completa (endpoint API + UI + backend reactions table)
 - ✅ setCurrentConversation: aggiunta al ChatContext per tracciare chat attiva
 - ✅ Cleanup: rimozione setConversationMessages non necessario
+- ✅ Bug fix: corretto errore `typingUserState` mancante `const` in `useInputBox.jsx`
 
 **Task in lavorazione**:
 - 🔜 Messaggi non letti con badge: broadcasting Socket.IO da implementare
@@ -135,6 +136,7 @@ Fase 9: Advanced Features           → 📋 Future
 |------|---------|--------|
 | 2026-03-13 | Reazioni emoji: implementazione completa (API + UI + backend reactions table) | gianlorenzomungiovino |
 | 2026-03-13 | Aggiunta setCurrentConversation al ChatContext per tracciare chat attiva | gianlorenzomungiovino |
+| 2026-03-13 | Bug fix: corretto errore `typingUserState` mancante `const` in `useInputBox.jsx` | gianlorenzomungiovino |
 | 2026-03-12 | Init GSD structure - PROJECT, ROADMAP, STATE created | gianlorenzomungiovino |
 | 2026-03-12 | Aggiunta Fase 10 (Advanced Features) + nuovi task: messaggi non letti, swipe gestures, crittografia E2EE, allegati, AI Ollama | gianlorenzomungiovino |
 | 2026-03-12 | Task creation: 7 tasks creati per advanced features | gianlorenzomungiovino |
