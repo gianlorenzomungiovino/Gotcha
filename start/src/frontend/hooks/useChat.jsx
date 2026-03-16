@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useChatContext } from "../componenti/ChatContext";
 import useAuth from "../../contesti/useAuth";
+import io from "socket.io-client";
 
 export function useChat(convId) {
   const { setCurrentConversation, incrementUnread } = useChatContext();
@@ -8,6 +9,7 @@ export function useChat(convId) {
   const chatBoxRef = useRef(null);
   const [isAtBottom, setIsAtBottom] = useState(true);
   const [messages, setMessages] = useState([]);
+  const socketRef = useRef(null);
 
   // Carica i messaggi della conversazione
   useEffect(() => {
@@ -81,6 +83,37 @@ export function useChat(convId) {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Connessione Socket.IO per ricevere nuovi messaggi
+  useEffect(() => {
+    if (convId && user) {
+      socketRef.current = io("http://localhost:3001", {
+        auth: {
+          token: sessionStorage.getItem("token"),
+        },
+      });
+
+      const socket = socketRef.current;
+
+      // Join conversation room
+      socket.emit("join_conversation", convId);
+
+      // Listen for new messages
+      socket.on("new_message", (message) => {
+        const formattedMessage = {
+          text: message.text,
+          sender: message.sender_id === user.id ? "user" : "other",
+          sender_username: message.sender_username,
+        };
+        setMessages((prev) => [...prev, formattedMessage]);
+        incrementUnread();
+      });
+
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [convId, user, incrementUnread]);
 
   function handleScrollBottom() {
     if (chatBoxRef.current) {

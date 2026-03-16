@@ -23,14 +23,6 @@ app.use(express.json());
 // ROUTES
 app.use("/auth", authRoutes);
 app.use("/conversations", conversationRoutes);
-app.use(
-  "/messages",
-  (req, res, next) => {
-    req.io = io;
-    next();
-  },
-  messageRoutes,
-);
 
 // SOCKET.IO
 const io = new SocketIOServer(server, {
@@ -39,6 +31,16 @@ const io = new SocketIOServer(server, {
     methods: ["GET", "POST"],
   },
 });
+
+// Middleware per passare io alle route
+app.use(
+  "/messages",
+  (req, res, next) => {
+    req.io = io;
+    next();
+  },
+  messageRoutes,
+);
 
 // Initialize Socket logic
 io.use((socket, next) => {

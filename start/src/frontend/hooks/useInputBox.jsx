@@ -41,18 +41,6 @@ export function useInputBox() {
         }
       });
 
-      // Listen for new messages
-      socket.on("new_message", (message) => {
-        // Aggiorna i messaggi quando arriva un nuovo messaggio
-        const formattedMessage = {
-          content: message.text,
-          sender: message.sender_id === user.id ? "user" : "bot",
-          encrypted: message.encrypted || false,
-        };
-        addMessage(formattedMessage.content, formattedMessage.sender);
-        incrementUnread(); // Incrementa non letti quando arriva messaggio
-      });
-
       // Listen for reactions
       socket.on("reaction_added", (data) => {
         console.log("Reaction added:", data);
