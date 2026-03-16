@@ -1,10 +1,22 @@
 ---
 id: S03
-status: planned
+status: in progress
 milestone: M001
 slices:
-  completedTasks: 0
-  totalTasks: 4
+  completedTasks: 1
+  totalTasks: 5
 ---
 
-Messages & real-time core slice. Covers REST messages API, Socket.IO room events, presence, typing, and unread-count backend model. Not yet complete in .planning/STATE.md.
+Messages & real-time core slice. Tasks cover REST messages API, server-side message encryption (AES-GCM), Socket.IO room integration, presence/typing indicators, and a basic unread-count backend model.
+
+**Completed:** T01 - Server-side encryption implementation (AES-GCM)
+
+- ✅ HTTP routes updated with encryption
+- ✅ WebSocket handlers updated with encryption
+- ✅ Crypto utility created
+- ✅ Migration script created
+
+**In Progress:** T02 - Database migration
+
+- ⏳ Migration script to be executed
+- ⏳ Schema updates pending

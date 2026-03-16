@@ -65,16 +65,19 @@ export default function chatSocket(io, socket) {
         return; // non invia né salva
       }
 
-      // SAVE MESSAGE
+      // SAVE MESSAGE (plaintext - no E2EE)
       const message = await db.one(
-        `INSERT INTO messages (conversation_id, sender_id, text)
-         VALUES ($1, $2, $3)
+        `INSERT INTO messages (conversation_id, sender_id, text, created_at)
+         VALUES ($1, $2, $3, NOW())
          RETURNING id, conversation_id, sender_id, text, created_at`,
         [conversation_id, authenticatedUserId, content],
       );
 
       // BROADCAST TO ROOM (solo per messaggi via socket, non HTTP)
-      io.to(`conversation_${conversation_id}`).emit("new_message", message);
+      io.to(`conversation_${conversation_id}`).emit("new_message", {
+        ...message,
+        text: message.text,
+      });
       console.log("📩 Socket message sent and broadcasted:", message);
     } catch (error) {
       console.error("🔥 Error saving message:", error);

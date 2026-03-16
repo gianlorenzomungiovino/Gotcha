@@ -2,53 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useChatContext } from "../componenti/ChatContext";
 import useAuth from "../../contesti/useAuth";
 
-// 🔐 E2EE: Decifra un messaggio con la chiave privata dell'utente
-async function decryptMessage(encryptedContent, privateKey) {
-  try {
-    const decrypted = await window.crypto.subtle.decrypt(
-      { name: "AES-GCM", salt: encryptedContent.salt, iv: encryptedContent.iv },
-      privateKey,
-      encryptedContent.ciphertext,
-    );
-    return new TextDecoder().decode(decrypted).toString();
-  } catch (err) {
-    console.error("E2EE Decryption failed:", err);
-    return encryptedContent; // Fallback se non cifrato
-  }
-}
-
 export function useChat(convId) {
-  const { messages, setCurrentConversation, incrementUnread } =
-    useChatContext();
+  const { setCurrentConversation, incrementUnread } = useChatContext();
   const { user } = useAuth();
   const chatBoxRef = useRef(null);
   const [isAtBottom, setIsAtBottom] = useState(true);
-  const [decryptedMessages, setDecryptedMessages] = useState([]);
-
-  // Genera chiave privata per E2EE (se non esiste)
-  useEffect(() => {
-    if (!user) return;
-
-    let privateKey = localStorage.getItem(`e2ee_private_key_${user.id}`);
-    if (!privateKey) {
-      const cryptoKey = window.crypto.subtle.generateKey(
-        { name: "AES-GCM", length: 256 },
-        false,
-        ["decrypt"],
-      );
-      window.crypto.subtle.exportKey("raw", cryptoKey).then((key) => {
-        window.crypto.subtle
-          .exportKey("raw", key)
-          .then((exportedKey) => {
-            privateKey = btoa(String.fromCharCode(...new Uint8Array(exportedKey)));
-            localStorage.setItem(`e2ee_private_key_${user.id}`, privateKey);
-          })
-          .catch(console.error);
-      });
-    }
-
-    // Carica i messaggi della conversazione
-  }, [convId, user]);
+  const [messages, setMessages] = useState([]);
 
   // Carica i messaggi della conversazione
   useEffect(() => {
@@ -93,29 +52,15 @@ export function useChat(convId) {
         const data = await res.json();
         console.log("Messages data received:", data);
 
-        // 🔐 Decifra i messaggi E2EE (se presenti)
-        const privateKey = localStorage.getItem(
-          `e2ee_private_key_${user.id}`,
-        );
-
-        // Mappa asincrona dei messaggi con Promise.all()
-        const formattedMessages = await Promise.all(
-          data.map(async (msg) => {
-            let content = msg.text;
-            if (msg.encrypted && privateKey) {
-              content = await decryptMessage(msg, privateKey);
-            }
-            return {
-              content,
-              sender: msg.sender_id === user?.id ? "user" : "other",
-              sender_username: msg.sender_username,
-              encrypted: msg.encrypted || false,
-            };
-          }),
-        );
+        // Mappa dei messaggi - backend restituisce plaintext
+        const formattedMessages = data.map((msg) => ({
+          text: msg.text,
+          sender: msg.sender_id === user?.id ? "user" : "other",
+          sender_username: msg.sender_username,
+        }));
 
         console.log("Formatted messages:", formattedMessages);
-        setDecryptedMessages(formattedMessages);
+        setMessages(formattedMessages);
       } catch (err) {
         console.error("Errore nel caricamento dei messaggi:", err);
       }
@@ -124,18 +69,18 @@ export function useChat(convId) {
     fetchMessages();
   }, [convId, user]);
 
-  // 📬 Gestione read receipts: quando arriva un nuovo messaggio incrementa non letti
+  // Gestione read receipts: quando arriva un nuovo messaggio incrementa non letti
   useEffect(() => {
-    if (messages.length > decryptedMessages.length) {
+    if (messages.length > 0) {
       incrementUnread();
     }
-  }, [messages.length, decryptedMessages.length]);
+  }, [messages.length]);
 
   useEffect(() => {
     if (chatBoxRef.current) {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     }
-  }, [decryptedMessages]); // Usa decryptedMessages invece di messages
+  }, [messages]);
 
   function handleScrollBottom() {
     if (chatBoxRef.current) {
@@ -154,7 +99,7 @@ export function useChat(convId) {
   }
 
   return {
-    messages: decryptedMessages, // Restituisce i messaggi decifrati
+    messages,
     chatBoxRef,
     isAtBottom,
     handleScrollBottom,

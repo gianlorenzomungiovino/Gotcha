@@ -39,7 +39,10 @@ export function ChatProvider({ children }) {
   }
 
   function decrementUnread() {
-    setState((prev) => ({ ...prev, unreadCount: Math.max(0, prev.unreadCount - 1) }));
+    setState((prev) => ({
+      ...prev,
+      unreadCount: Math.max(0, prev.unreadCount - 1),
+    }));
   }
 
   // Imposta la conversazione corrente
@@ -72,9 +75,7 @@ export function ChatProvider({ children }) {
         ...prev,
         reactions: {
           ...prev.reactions,
-          [convId]: (prev.reactions[convId] || []).filter(
-            (e) => e !== emoji,
-          ),
+          [convId]: (prev.reactions[convId] || []).filter((e) => e !== emoji),
         },
       }));
     } catch (err) {

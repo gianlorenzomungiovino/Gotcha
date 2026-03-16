@@ -2,9 +2,12 @@
 
 <!-- Append-only register of architectural and pattern decisions -->
 
-| ID | Decision | Rationale | Date |
-|----|----------|-----------|------|
-| D001 | Adopt modular monolith architecture with Express API + Socket.IO + PostgreSQL | Keeps backend and frontend in a single deployable unit while maintaining clear module boundaries; fits real-time chat needs and existing Node.js stack. | 2026-03-11 |
-| D002 | Use React 18 + Vite + Tailwind CSS for the SPA frontend | Provides fast developer feedback, modern React tooling, and utility-first styling suitable for responsive real-time UI. | 2026-03-11 |
-| D003 | Use JWT + bcrypt for authentication | Standard approach for stateless auth in SPAs; balances security and implementation complexity, aligns with existing Node ecosystem. | 2026-03-12 |
-| D004 | Use Socket.IO for real-time messaging | Mature real-time library with reconnection, room management, and good Node integration, ideal for multi-room chat scenarios. | 2026-03-11 |
+| ID   | Decision                                                                      | Rationale                                                                                                                                                                           | Date       |
+| ---- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| D001 | Adopt modular monolith architecture with Express API + Socket.IO + PostgreSQL | Keeps backend and frontend in a single deployable unit while maintaining clear module boundaries; fits real-time chat needs and existing Node.js stack.                             | 2026-03-11 |
+| D002 | Use React 18 + Vite + Tailwind CSS for the SPA frontend                       | Provides fast developer feedback, modern React tooling, and utility-first styling suitable for responsive real-time UI.                                                             | 2026-03-11 |
+| D003 | Use JWT + bcrypt for authentication                                           | Standard approach for stateless auth in SPAs; balances security and implementation complexity, aligns with existing Node ecosystem.                                                 | 2026-03-12 |
+| D004 | Use Socket.IO for real-time messaging                                         | Mature real-time library with reconnection, room management, and good Node integration, ideal for multi-room chat scenarios.                                                        | 2026-03-11 |
+| D005 | Derive client-side E2EE key from JWT (user-requested)                         | Requested to reuse existing JWT as a seed for client-side encryption; simpler than a full key-exchange flow, with acknowledged security tradeoffs (token rotation, server minting). | 2026-03-16 |
+| D006 | Encrypt messages server-side with AES-GCM (not E2EE)                          | Keep E2EE out of scope for M001 while still encrypting message content at rest/application-layer; key managed by server secrets.                                                    | 2026-03-16 |
+| D007 | Remove server-side encryption, store messages in plaintext                    | E2EE is out of scope for M001; server-side encryption adds unnecessary complexity and performance overhead. Messages are now stored and transmitted in plaintext.                   | 2026-03-16 |

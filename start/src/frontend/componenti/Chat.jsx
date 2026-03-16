@@ -142,7 +142,7 @@ export default function Chat() {
   return (
     <div className="chat-layout">
       <div className="chat-header">
-        <BackButton onClick={() => window.location.href = "/chatlist"} />
+        <BackButton onClick={() => (window.location.href = "/chatlist")} />
         <h3>Chat con {convId}</h3>
 
         {/* Reazioni alla conversazione */}
@@ -178,22 +178,18 @@ export default function Chat() {
                 {msg.sender_username}
               </div>
             )}
-            {msg.content}
+            {msg.text}
 
             {/* Reazioni al messaggio */}
             {messageReactions[msg.id] && (
               <MessageReactions
                 reactions={messageReactions[msg.id]}
-                onReaction={(reaction) =>
-                  toggleReaction(msg.id, reaction)
-                }
+                onReaction={(reaction) => toggleReaction(msg.id, reaction)}
               />
             )}
 
             {/* Read Receipts - doppio check */}
-            {msg.sender === "other" && (
-              <span className="read-receipt">✓✓</span>
-            )}
+            {msg.sender === "other" && <span className="read-receipt">✓✓</span>}
           </span>
         ))}
       </div>

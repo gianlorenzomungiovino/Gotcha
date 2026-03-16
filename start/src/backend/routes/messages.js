@@ -2,231 +2,107 @@ import express from "express";
 import db from "../db/index.js";
 import { authMiddleware } from "../utils/authMiddleware.js";
 
+// Router per gestire le richieste ai messaggi
 const router = express.Router();
 
-/* ============================================================
+/* ====================
    GET messaggi di una conversazione
    /messages/:conversationId
-   ============================================================ */
+   ==================== */
 router.get("/:conversationId", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
     const { conversationId } = req.params;
 
-    // 🔐 Verifica che l’utente faccia parte della conversazione
-    const isParticipant = await db.oneOrNone(
-      `
-      SELECT 1 
-      FROM conversation_participants 
-      WHERE conversation_id = $1 AND user_id = $2;
-      `,
+    // Verifica che l'utente sia partecipante alla conversazione
+    const participation = await db.query(
+      "SELECT * FROM conversation_participants WHERE conversation_id = $1 AND user_id = $2",
       [conversationId, userId],
     );
 
-    if (!isParticipant)
-      return res.status(403).json({ error: "Accesso non autorizzato" });
+    if (participation.rows.length === 0) {
+      return res
+        .status(403)
+        .json({ error: "Non sei un partecipante a questa conversazione" });
+    }
 
-    const messages = await db.any(
-      `
-      SELECT 
-        m.id,
-        m.text,
-        m.sender_id,
-        u.username AS sender_username,
-        m.created_at
-      FROM messages m
-      JOIN users u ON u.id = m.sender_id
-      WHERE m.conversation_id = $1
-      ORDER BY m.created_at ASC;
-      `,
+    // Recupera i messaggi ordinati per data
+    const messages = await db.query(
+      `SELECT 
+          m.id,
+          m.conversation_id,
+          m.sender_id,
+          m.text,
+          m.created_at,
+          u.username as sender_username,
+          u.avatar_url as sender_avatar_url,
+          m.reactions
+        FROM messages m
+        JOIN users u ON m.sender_id = u.id
+        WHERE m.conversation_id = $1
+        ORDER BY m.created_at ASC`,
       [conversationId],
     );
 
-    res.json(messages);
+    // Formatta i messaggi per il frontend (plaintext)
+    const formattedMessages = messages.rows.map((msg) => {
+      return {
+        id: msg.id,
+        text: msg.text,
+        sender: {
+          id: msg.sender_id,
+          username: msg.sender_username,
+          avatar_url: msg.sender_avatar_url,
+        },
+        reactions: msg.reactions ? JSON.parse(msg.reactions) : [],
+      };
+    });
+
+    res.json(formattedMessages);
   } catch (error) {
-    console.error("Errore fetch messages:", error);
-    res.status(500).json({ error: "Errore recupero messaggi" });
+    console.error("Errore nel recupero dei messaggi:", error);
+    res.status(500).json({ error: "Errore nel recupero dei messaggi" });
   }
 });
 
-/* ============================================================
-   POST invia un messaggio
-   body: { text }
-   ============================================================ */
-router.post("/:conversationId", authMiddleware, async (req, res) => {
+// POST - Nuovo messaggio
+router.post("/", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { conversationId } = req.params;
-    const { text } = req.body;
+    const { conversationId, text } = req.body;
 
-    if (!text || text.trim() === "") {
-      return res.status(400).json({ error: "Testo del messaggio mancante" });
-    }
-
-    // 🔐 Verifica che l’utente sia partecipante
-    const isParticipant = await db.oneOrNone(
-      `
-      SELECT 1 
-      FROM conversation_participants 
-      WHERE conversation_id = $1 AND user_id = $2;
-      `,
+    // Verifica che l'utente sia partecipante alla conversazione
+    const participation = await db.query(
+      "SELECT * FROM conversation_participants WHERE conversation_id = $1 AND user_id = $2",
       [conversationId, userId],
     );
 
-    if (!isParticipant)
-      return res.status(403).json({ error: "Accesso non autorizzato" });
+    if (participation.rows.length === 0) {
+      return res
+        .status(403)
+        .json({ error: "Non sei un partecipante a questa conversazione" });
+    }
 
-    // 📨 Inserisci messaggio
-    const message = await db.one(
-      `
-      INSERT INTO messages (conversation_id, sender_id, text)
-      VALUES ($1, $2, $3)
-      RETURNING id, conversation_id, sender_id, text, created_at;
-      `,
+    // Crea il messaggio in plaintext (no E2EE)
+    const result = await db.query(
+      `INSERT INTO messages (conversation_id, sender_id, text, created_at)
+       VALUES ($1, $2, $3, NOW())
+       RETURNING id, conversation_id, sender_id, text, created_at`,
       [conversationId, userId, text],
     );
 
-    // Aggiorna updated_at della conversazione
-    await db.none(
-      `
-      UPDATE conversations
-      SET updated_at = now()
-      WHERE id = $1;
-      `,
-      [conversationId],
-    );
-
-    // 🚀 BROADCAST MESSAGE VIA SOCKET.IO
-    req.io.to(`conversation_${conversationId}`).emit("new_message", message);
-    console.log("📩 HTTP message sent and broadcasted:", message);
-
-    res.json(message);
+    res.json({
+      id: result.rows[0].id,
+      text: result.rows[0].text,
+      sender: {
+        id: userId,
+        username: req.user.username,
+        avatar_url: req.user.avatar_url,
+      },
+    });
   } catch (error) {
-    console.error("Errore send message:", error);
-    res.status(500).json({ error: "Errore invio messaggio" });
-  }
-});
-
-/* ============================================================
-   GET recupera tutte le reazioni di una conversazione
-   ============================================================ */
-router.get("/:conversationId/reaction", authMiddleware, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { conversationId } = req.params;
-
-    // 🔐 Verifica che l'utente sia partecipante
-    const isParticipant = await db.oneOrNone(
-      `
-      SELECT 1
-      FROM conversation_participants
-      WHERE conversation_id = $1 AND user_id = $2;
-      `,
-      [conversationId, userId],
-    );
-
-    if (!isParticipant)
-      return res.status(403).json({ error: "Accesso non autorizzato" });
-
-    // 🎯 Recupera tutte le reazioni distinte per questa conversazione
-    const reactions = await db.any(
-      `
-      SELECT DISTINCT emoji
-      FROM message_reactions
-      WHERE conversation_id = $1;
-      `,
-      [conversationId],
-    );
-
-    res.json({ reactions });
-  } catch (error) {
-    console.error("Errore fetch reactions:", error);
-    res.status(500).json({ error: "Errore recupero reazioni" });
-  }
-});
-
-/* ============================================================
-   POST aggiungi/rimuovi reazione emoji
-   body: { emoji }
-   ============================================================ */
-router.post("/:conversationId/reaction", authMiddleware, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { conversationId } = req.params;
-    const { emoji } = req.body;
-
-    if (!emoji || emoji.trim() === "") {
-      return res.status(400).json({ error: "Emoji mancante" });
-    }
-
-    // 🔐 Verifica che l'utente sia partecipante
-    const isParticipant = await db.oneOrNone(
-      `
-      SELECT 1
-      FROM conversation_participants
-      WHERE conversation_id = $1 AND user_id = $2;
-      `,
-      [conversationId, userId],
-    );
-
-    if (!isParticipant)
-      return res.status(403).json({ error: "Accesso non autorizzato" });
-
-    // 🎯 Cerca o crea la reazione
-    const existingReaction = await db.oneOrNone(
-      `
-      SELECT id, emoji
-      FROM message_reactions
-      WHERE conversation_id = $1 AND user_id = $2 AND emoji = $3;
-      `,
-      [conversationId, userId, emoji],
-    );
-
-    if (existingReaction) {
-      // Rimuovi reazione esistente
-      await db.none(
-        `
-        DELETE FROM message_reactions
-        WHERE id = $1;
-        `,
-        [existingReaction.id],
-      );
-
-      res.json({
-        success: true,
-        message: `Reazione ${emoji} rimossa`,
-        reactions: [],
-      });
-    } else {
-      // Aggiungi nuova reazione
-      const reaction = await db.one(
-        `
-        INSERT INTO message_reactions (conversation_id, user_id, emoji)
-        VALUES ($1, $2, $3)
-        RETURNING id, conversation_id, user_id, emoji;
-        `,
-        [conversationId, userId, emoji],
-      );
-
-      // Recupera tutte le reazioni per questa conversazione
-      const reactions = await db.any(
-        `
-        SELECT DISTINCT emoji
-        FROM message_reactions
-        WHERE conversation_id = $1;
-        `,
-        [conversationId],
-      );
-
-      res.status(201).json({
-        success: true,
-        message: `Reazione ${emoji} aggiunta`,
-        reactions,
-      });
-    }
-  } catch (error) {
-    console.error("Errore toggle reaction:", error);
-    res.status(500).json({ error: "Errore gestione reazioni" });
+    console.error("Errore nella creazione del messaggio:", error);
+    res.status(500).json({ error: "Errore nella creazione del messaggio" });
   }
 });
 
